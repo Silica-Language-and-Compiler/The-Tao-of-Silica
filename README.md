@@ -25,13 +25,12 @@ The PDF is not committed to the repository; it lives on the release page.
 |---|---|
 | `main.tex` | Book metadata (title, subtitle, author) and chapter order |
 | `taosilica.sty` | House style: page size, fonts, colours, chapter style, cover, sidebars, asides |
-| `frontmatter/` | Title page, copyright page, preface |
+| `frontmatter/` | Title page, copyright page, acknowledgments, preface |
 | `chapters/ch01.tex` – `ch12.tex` | One file per chapter: Part I (1 Why? and Why Not?, 2 How We Got Here), Part II (3–12, the ten principles) |
 | `templates/showcase.tex` | Sample of every book element (chart, diagram, sidebox, aside, footnotes); not included in the book |
 | `research/` | Cited research notes drawn from the Silica, SwErl, BEAM_SEMP, BEES and Unsafe Impedance sources, plus `chapter-map.md` |
 | `interviews/` | Interview transcripts, progress log and style decisions |
 | `.claude/skills/ghostwriter/` | The journalist/ghostwriter interview skill |
-| `backmatter/` | Acknowledgments, etc. |
 | `figures/` | TikZ diagrams and pgfplots charts (`\input` into figures) |
 | `data/` | CSV data for charts |
 | `images/` | Cover art (`images/cover.jpg`) and other images |

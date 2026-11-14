@@ -14,7 +14,8 @@ PDP-11, and in a real sense almost every mainstream language since has
 inherited its picture of a computer: one processor, one flat expanse of memory,
 instructions carried out one after another. The chips on sale today look
 nothing like that. They have many cores, units that work on many values at
-once, hardware that tags memory and signs pointers to catch attacks, and memory
+once, hardware that tags memory and authenticates pointers to catch
+attacks---on ARM chips, Memory Tagging and Pointer Authentication---and memory
 of different kinds with different properties. Silica is designed to be faithful
 to the machines we actually have, not to a portable memory of the ones we
 used to have.\footnote{\src{silica/docs/design-principles.md}, line 67.}
@@ -32,7 +33,7 @@ Silica. Every board and every chip exposes behaviours that, in C, they could
 reach only with great difficulty, if at all. In Silica they can state the
 reality of the device directly: that this memory is of one kind and that memory
 of another, that the chip itself enforces atomic access here, that pointers are
-audited by the hardware there. Being able to say what the chip actually
+authenticated by the hardware there. Being able to say what the chip actually
 guarantees, in the language rather than in comments and conventions, is what
 resonates most.\footnote{Interview, 2026-11-13.}
 

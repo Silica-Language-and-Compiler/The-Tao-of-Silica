@@ -7,7 +7,9 @@
 \chapter{Why? and Why Not?}
 \label{ch:why}
 
-% TODO-INTERVIEW: Choose an epigraph (not from the author's own words).
+% Epigraph: the author's own words, by the author's explicit permission
+% (interviews/style.md, 2026-11-14). The only exception to the quotation rule.
+\epigraph{Why isn't hard to ask, it can be hard to hear.}{Interview, 14 November 2026}
 
 Every programming language is an answer. Most of the time nobody remembers
 the question. Garbage collectors, loops, exceptions, type aliases, optimizers
@@ -18,7 +20,7 @@ inheritance and started asking, of each piece, a child's question: \emph{why?}
 
 This book is about what happened when that question was asked persistently,
 for years, of the tools working programmers trust most. It is also about the
-question that comes second, and is harder to ask: \emph{why not?} The first
+question that comes second: \emph{why not?} The first
 question takes things apart. The second decides whether to build something in
 their place.
 
@@ -95,8 +97,10 @@ that someone, somewhere, stops being able to see. Silica's principles,
 the subject of the second part of this book, are largely a list of costs
 made visible again.
 
-% TODO-INTERVIEW: Which "why?" was the most uncomfortable to ask — the one
-%   where the conventional answer turned out to be strongest?
+None of this, in Barney's view, makes the question itself difficult. Why is
+never hard to ask, though the answer can be hard to hear. Even then, no answer is
+harder to act on than any other, because an answer is only data: something to
+measure the next decision against.\footnote{``Answers are just data.'' Interview, 2026-11-14.}
 
 \section{When why becomes why not}
 
@@ -129,14 +133,23 @@ waiting underneath. And a port, however faithful, can only carry an old design
 into a new language.
 
 % TODO-VERIFY: BEAM_SEMP's last commit date: 2025-10-09 or 2025-10-31.
-% TODO-INTERVIEW: The Rust BEAM port — where is it now, and how far did it get?
+
+Barney never returned to the Rust port. Silica made it unnecessary, and it was
+set aside unfinished.
 
 \section{The wrong problem}
 
 By 24~December 2025 the Rust port was well along; the re-engineering of the
-virtual machine was most of the way to completion. Barney was working on it
-that day, paused, and began to think. What came out of the thinking was that the
-port was solving the wrong problem.
+virtual machine was most of the way to completion. It was Christmas Eve. Barney
+and Barney's spouse were at home; their children were spending the holiday with
+families of their own, and the port was something to keep busy with. That day
+the work was adding a just-in-time compiler, which turns code into machine
+instructions while the program runs, and dealing with the memory problems it
+raised. The operating system kept moving memory the compiler was trying to use,
+which was annoying but fixable, and the compiler could only be called from the
+unsafe part of Rust, outside the language's guarantees. None of that was the
+trigger. It was data. In the middle of it Barney paused, and the realisation
+arrived unbidden: the port was solving the wrong problem.
 
 Every language is designed to solve a particular set of problems. Rust was not
 designed to express the ideas and principles at the heart of the BEAM, and
@@ -151,9 +164,6 @@ The first designs for a new language, on paper and in Barney's head, took a few
 hours. Two days later, on 26~December 2025, Silica's first commit was made. At
 that moment the question had stopped being \emph{why is it like this?} and
 become \emph{why not build something that is not?}
-
-% TODO-INTERVIEW: The 24 December scene — where were you, and what was on the
-%   screen when you paused?
 
 \section{A recovery, and a new kind of reader}
 
@@ -206,9 +216,6 @@ redesign in the project's history (Chapter~\ref{ch:memory}).
 A language designed by asking why has to be willing to ask it of its own
 decisions. The reversals in Silica's history are not signs of indecision. They
 are the method working.
-
-% TODO-INTERVIEW: Which reversal was the hardest to make? Which "why not?"
-%   decision surprised you most once you'd made it?
 
 \section{What the questions became}
 

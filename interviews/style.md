@@ -27,6 +27,10 @@ The `ghostwriter` skill reads this before every session.
   Barney and the work. Combined with the quotation rule, the author's views
   appear as paraphrase in the body, with short quotes only in footnotes.
 
+- **Epigraph exception (author decision, 2026-11-14).** The author permits one of
+  their own quotes as the Chapter 1 epigraph, if an appropriate one is found.
+  The body-text rule is unchanged.
+
 ## Open decisions
 
 - **Chapter order:** Why? → History → ten principles. Confirm.
