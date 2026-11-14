@@ -12,30 +12,51 @@
 A conventional compiler is generous. It accepts nearly anything that is
 grammatical, grumbles about some of it in warnings, and then quietly repairs
 the rest: it removes work that does nothing, merges work done twice, and
-tidies arithmetic. Silica's compiler starts from the opposite assumption.
-Code that is almost right is not right, and the compiler should say so rather
-than cover for it.
+tidies arithmetic. Silica's design starts from the opposite assumption. Code
+that is almost right is not right, and the compiler should say so rather than
+cover for it. Parts of that design are built; the most distinctive part, set out
+in the next section, is not yet.
 
 \section{Refuse, don't repair}
 
-Silica treats the patterns an optimizer usually cleans up---values computed and
-never used, the same work done twice, arithmetic that could be simpler---as
-mistakes in the program rather than chances for the compiler to look clever.
-They are errors, not warnings, and they cannot be switched off. A warning is
-something people learn to ignore. A repair the programmer never sees makes the
-program's real behaviour harder to predict. Silica would rather the program say
-what it means. The stance has a history: Barney's distrust of optimizers began
-with seeing how much of their work goes into silently translating an old machine
-model onto new chips (Chapter~\ref{ch:hidden}).
+In Silica's design, the patterns an optimizer usually cleans up---values
+computed and never used, the same work done twice, arithmetic that could be
+simpler, work repeated needlessly inside a recursion---are treated as mistakes
+in the program rather than chances for the compiler to look clever. The rules
+call for them to be errors, not warnings, with no way to switch them off. A
+warning is something people learn to ignore. A repair the programmer never sees
+makes the program's real behaviour harder to predict. The design would rather
+the program say what it means. The stance has a history: Barney's distrust of
+optimizers began with seeing how much of their work goes into silently
+translating an old machine model onto new chips (Chapter~\ref{ch:hidden}).
+
+Distrusting repairs explains why the compiler should not tidy up behind the
+programmer. It does not, on its own, explain why it should refuse. Barney's
+reason is a simple argument rather than a lesson from any one incident: every
+line of code is a line that might hold a bug, and code that does nothing still
+adds complexity and still offers bad actors one more place to work. What is not
+needed should go.\footnote{``Every line of code written is a line of code that
+could have a bug in it.'' Interview, 2026-11-14.} People are expected to clean
+up after themselves at work, at home and as guests in someone else's house. The
+design asks the same of anyone who changes a program.
+
+This is a design, not yet a description of the compiler. As this book was
+written, only the first and simplest of these refusals had been built: a value
+computed and then never used stops the build. The rest---duplicate work,
+redundant arithmetic, needless repetition and the others---are specified but
+not implemented.\footnote{Implementation status table,
+\src{silica/compiler/design_documents/silica-specification-additional.md}.}
+The gap is not a strategy; the compiler simply has not caught up with the
+rules.
+What is already true is the other half of the stance: Silica's compiler does
+not quietly rewrite what the programmer wrote. It neither repairs these patterns
+nor, for now, refuses them.
 
 The beginner book frames refusal as a kindness: a program that is stopped cannot
 quietly do the wrong thing.\footnote{\src{silica/docs/learn-programming.md},
 line 206: ``That is a gift.''}
 
-% TODO-VERIFY: Only one of these refusals (unused values) is implemented; the
-%   rest are specified intent. Keep the text accurate as they land.
-% TODO-INTERVIEW: Is the gap between the published rules and the implemented
-%   one deliberate, a statement of intent?
+% TODO-VERIFY: Keep this section current as the refusal rules are implemented.
 
 \section{Let the machine do the risky work}
 
@@ -47,6 +68,12 @@ write that machinery themselves, and it is where security holes are commonly
 born. In Silica the programmer does not write it at all. The program states
 what kind of data it expects, and the compiler produces the checking, copying
 and releasing from that statement when it builds the program.
+
+The same division of labour now runs the other way. Much of Silica's code is
+written with the help of AI models, which can produce a great deal very quickly
+and are prone to leaving things behind. The compiler's refusals act as a check
+on their work. Each error says exactly what should not be there, precise enough
+that a model can remove it without guesswork.
 
 \section{The whole program, seen whole}
 
@@ -81,18 +108,29 @@ compiles itself, and it is accepted only when the compiler it produces, compilin
 itself again, gives back exactly the same result, byte for byte. That was first
 achieved on 12~September 2026.
 
-% TODO-INTERVIEW: Take me to the day of the first byte-for-byte match.
+It did not arrive all at once. Barney watched compile after compile over several
+days while the last leftovers of the compiler's first life, the runtime pieces
+of the Rust program that had bootstrapped it, were found and removed. Once the
+bytes matched, Silica no longer needed Rust at all, and every Rust dependency
+was taken out; Clang remained as the assembler and linker. The reason was the
+one that drives the refusals. Tools a machine no longer needs are removed for
+the same reasons as code a program no longer needs.
 
 \section{What it costs}
 
 A strict compiler is a demanding companion. Code that would run elsewhere is
-refused here until it is clean. Familiar escape hatches are missing. And the
-standard is costly to uphold: tens of thousands of tests, run on every platform,
-for every change.
+already refused here when it breaks Silica's existing rules, and once the full
+set of refusals is built, almost-right code will be refused too. Familiar escape
+hatches are missing by design. And the standard is costly to uphold: tens of
+thousands of tests, run on every platform, for every change.
 
 \section{What it opens up}
 
 \begin{itemize}
+  \item \textbf{Machine-written code you can rely on, at scale.} With a
+        compiler that refuses what is not needed and says exactly what to
+        remove, code written with AI models comes out shorter, more likely to
+        be correct and more likely to be safe, however much of it there is.
   \item \textbf{Performance you can trust.} When nothing is rewritten behind
         the programmer's back, what is written is what runs.
   \item \textbf{Fewer places for attacks to start.} The routines where
@@ -108,5 +146,5 @@ for every change.
         can grow into one that proves things, without a redesign.
 \end{itemize}
 
-% TODO-INTERVIEW: What does a compiler that refuses make possible for teams,
-%   or for students, that a generous one does not?
+% TODO-INTERVIEW: Beyond AI-assisted work: what does a refusing compiler change
+%   for students learning to program?

@@ -1,0 +1,39 @@
+% The repair loop (Chapter 6). Machine steps in pale boxes; human gates
+% in solid jade. Each human gate can stop the loop.
+\begin{tikzpicture}[
+    node distance=5mm and 9mm,
+    machine/.style={draw=taoaccent, thick, rounded corners=2pt, fill=taopaper,
+                 text width=26mm, align=center, minimum height=9mm,
+                 font=\small},
+    human/.style={machine, fill=taoaccent, text=white, font=\small\itshape},
+    arrow/.style={-{Stealth[length=2mm]}, taoink!70, thick},
+    stop/.style={-{Stealth[length=2mm]}, taoink!50, thick, dashed},
+  ]
+  % Down the left
+  \node[machine]                 (fail)    {A part fails};
+  \node[machine, below=of fail]  (report)  {The failure is reported};
+  \node[machine, below=of report](flag)    {AI evaluates and flags it};
+  \node[machine, below=of flag]  (propose) {AI proposes a fix};
+  % Up the right
+  \node[human, right=of propose] (gate1) {A person reviews\\the proposal};
+  \node[machine,  above=of gate1]   (write) {AI writes the fix};
+  \node[human, above=of write]   (gate2) {A person reviews\\the fix};
+  \node[machine,  above=of gate2]   (prod)  {Into production};
+
+  \draw[arrow] (fail) -- (report);
+  \draw[arrow] (report) -- (flag);
+  \draw[arrow] (flag) -- (propose);
+  \draw[arrow] (propose) -- (gate1);
+  \draw[arrow] (gate1) -- (write);
+  \draw[arrow] (write) -- (gate2);
+  \draw[arrow] (gate2) -- (prod);
+  \draw[arrow, dashed] (prod.north) -- ++(0,4mm) -| node[pos=0.25, above,
+        font=\footnotesize\itshape, text=taoink!70] {the next failure}
+        (fail.north);
+
+  % Human gates may say no
+  \draw[stop] (gate1.east) -- ++(6mm,0) node[right, font=\footnotesize\itshape,
+        text=taoink!70, align=left] {no:\\stop};
+  \draw[stop] (gate2.east) -- ++(6mm,0) node[right, font=\footnotesize\itshape,
+        text=taoink!70, align=left] {no:\\stop};
+\end{tikzpicture}
