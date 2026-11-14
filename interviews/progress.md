@@ -14,7 +14,7 @@ Running log kept by the `ghostwriter` skill.
 | 6 | Resilience — Fail Gently, Never Silently | 1 | woven 2026-11-14 (new sections: The loop that heals, with figure; The master's studio; Helping each other up) |
 | 7 | Predictability — Leave Nothing to Chance | 1 | woven 2026-11-13 (new sections: The heap and the file; Proof before code) |
 | 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
-| 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
+| 9 | Accountability — Make Danger Visible | 1 | woven 2026-11-14 (new section: For everyone who answers for software) |
 | 10 | Rigor — Refuse the Almost Right | 1 | woven 2026-11-14 |
 | 11 | Fidelity — Respect the Machine | 1 | woven 2026-11-14 (new figure: hourglass vs channel) |
 | 12 | Connection — Speak Across Every Boundary | 1 | woven 2026-11-14 (new section: Fork the language) |
@@ -419,3 +419,37 @@ Woven (author approved): ch11 (ARM first and portability; LLVM as PDP-11
 bottleneck + figures/hourglass.tex; the harder path on boards; simulation
 industry and measure first; anyone with a need can build). Author approved
 mentioning the simulation industry.
+
+### 2026-11-14 (fifth) — Chapter 9 (Accountability)
+Transcript: `sessions/2026-11-14-ch09-accountability.md`. 6 questions.
+
+Learned:
+- **No inbound calls — separation of roles.** To embed a Silica app in another
+  system, communicate with it through transport. Calling in directly would
+  bypass data checking and undermine Silica's security promises.
+- **`dangerous_` spreading:** no complaints yet, though some are expected; no
+  change anticipated, because the mark makes security audits easier. No
+  certified-safe wrapper to stop the spread.
+- **Audience:** all of them — engineers, managers, auditors, policymakers; it
+  affects all their work. Takeaway: the old ways don't have to be followed; we
+  have new tools, use them for what they're good at. "Tradition can be both good
+  and stifling. Don't let the good get stifled."
+- **Trusting users:** tech people talk about trust with users but rarely trust
+  them — "trust us, we know what is best for you". New tools should let users
+  express agency; tools must let them see what is happening and how trustworthy
+  it is. Old systems may not want that visibility.
+- **How users would see it:** through an AI they have come to trust, highlighting
+  potential dangers.
+- Organism: very early conceptualization; expect dramatic changes in design and
+  development, but it will keep its vision.
+
+New open threads:
+- Fifi's poodle name origin (not asked).
+- Capabilities and brokered isolation: plan and timing (not asked directly).
+
+To verify:
+- Nothing new.
+
+Woven (author approved): ch09 (no inbound calls as separation of roles; the
+spreading mark stays; trusting users and AI-highlighted danger; Organism early
+stage; users who can see and choose; For everyone who answers for software).
