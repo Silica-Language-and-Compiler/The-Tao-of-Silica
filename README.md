@@ -8,6 +8,17 @@ LaTeX source for the book. Built on the `memoir` class with LuaLaTeX.
     latexmk -pvc     # rebuilds automatically on every save
     latexmk -c       # removes intermediate files
 
+## Releasing a PDF
+
+GitHub Actions builds the book and attaches the PDF to a release whenever a
+tag is pushed (`.github/workflows/release-pdf.yml`). Tags starting `draft-`
+become pre-releases; `v*` tags become full releases.
+
+    git tag draft-2026-11-20
+    git push origin draft-2026-11-20
+
+The PDF is not committed to the repository; it lives on the release page.
+
 ## Layout
 
 | Path | Contents |
