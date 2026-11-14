@@ -6,7 +6,7 @@ Running log kept by the `ghostwriter` skill.
 
 | Ch | Title | Sessions | Status |
 |---|---|---|---|
-| 1 | Why? and Why Not? | 1 | woven 2026-11-13 (new sections: The wrong problem; A recovery, and a new kind of reader) |
+| 1 | Why? and Why Not? | 2 | woven 2026-11-13; second session woven 2026-11-14 (new sections: The wrong problem; A recovery, and a new kind of reader) |
 | 2 | How We Got Here | 1 | woven 2026-11-14 |
 | 3 | Honesty — Hide Nothing | 1 | woven 2026-11-13 (new section: Honest about the tools) |
 | 4 | Transparency — Say What You Do | 1 | woven 2026-11-13 |
@@ -526,3 +526,32 @@ To verify:
 Woven (author approved): ch02 (Rust bootstrap; pace with nothing skipped;
 data-structure deletion; summer and fixed point; reckoning confirmed and
 exciting; build-measure-replace; training trials and flawed code).
+
+### 2026-11-14 (eighth) — Chapter 1, second session (Why? and Why Not?)
+Transcript: `sessions/2026-11-14-ch01-why-2.md`. 6 questions. (Paused midway for
+the preface.)
+
+Learned:
+- **24 December 2025 was Christmas Eve day.** Barney and their spouse were at
+  home; the children were with their own families. The port was something to
+  keep occupied.
+- **The work that day:** adding a JIT compiler to the Rust BEAM and working
+  through the memory issues it produced — the OS kept moving allocations the
+  JIT tried to use (annoying but fixable); the JIT had to be called from unsafe
+  Rust. **Not the trigger** — "just data". The "wrong problem" came to mind
+  unbidden.
+- **The port's fate:** Silica made it unnecessary; never touched again.
+- **Why is never hard to ask.** We may not like the answer, but the question
+  isn't hard; no answer is hardest — answers are just data. (Also resolves the
+  "hardest reversal" gap.)
+- **Epigraph:** author permits one of their own quotes for Chapter 1.
+
+New open threads:
+- None.
+
+To verify:
+- Nothing new.
+
+Woven (author approved): ch01 (Christmas Eve scene and JIT as data; port never
+touched again; why is never hard to ask; epigraph "Why is never hard to ask.").
+Intro no longer calls why-not "harder to ask" (would contradict the author).
