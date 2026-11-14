@@ -1,0 +1,112 @@
+% =====================================================================
+%  Chapter 10 — Principle: Rigor (Refuse the Almost Right)
+%  Map: research/chapter-map.md (Chapter 10)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Refuse the Almost Right}
+\chapter{Rigor}
+\label{ch:refuses}
+
+A conventional compiler is generous. It accepts nearly anything that is
+grammatical, grumbles about some of it in warnings, and then quietly repairs
+the rest: it removes work that does nothing, merges work done twice, and
+tidies arithmetic. Silica's compiler starts from the opposite assumption.
+Code that is almost right is not right, and the compiler should say so rather
+than cover for it.
+
+\section{Refuse, don't repair}
+
+Silica treats the patterns an optimizer usually cleans up---values computed and
+never used, the same work done twice, arithmetic that could be simpler---as
+mistakes in the program rather than chances for the compiler to look clever.
+They are errors, not warnings, and they cannot be switched off. A warning is
+something people learn to ignore. A repair the programmer never sees makes the
+program's real behaviour harder to predict. Silica would rather the program say
+what it means. The stance has a history: Barney's distrust of optimizers began
+with seeing how much of their work goes into silently translating an old machine
+model onto new chips (Chapter~\ref{ch:hidden}).
+
+The beginner book frames refusal as a kindness: a program that is stopped cannot
+quietly do the wrong thing.\footnote{\src{silica/docs/learn-programming.md},
+line 206: ``That is a gift.''}
+
+% TODO-VERIFY: Only one of these refusals (unused values) is implemented; the
+%   rest are specified intent. Keep the text accurate as they land.
+% TODO-INTERVIEW: Is the gap between the published rules and the implemented
+%   one deliberate, a statement of intent?
+
+\section{Let the machine do the risky work}
+
+Rigor also means knowing which jobs people should not do by hand. Some routine
+work is tedious, easy to get subtly wrong and dangerous when wrong: checking
+data that arrives from a network, copying a message safely from one actor to
+another, deciding when memory may be released. In most languages programmers
+write that machinery themselves, and it is where security holes are commonly
+born. In Silica the programmer does not write it at all. The program states
+what kind of data it expects, and the compiler produces the checking, copying
+and releasing from that statement when it builds the program.
+
+\section{The whole program, seen whole}
+
+Silica treats an application as one program, examined as a whole, not as a pile
+of separately built pieces stitched together at the end. Libraries arrive as
+source, not as opaque binaries. Seeing everything at once lets the compiler make
+promises about the whole application that no piecemeal process could. Where the
+current compiler cuts corners to save memory, the project treats that as a
+temporary limitation to be fixed in the compiler, never as a reason to change
+the language.
+
+% TODO-INTERVIEW: Does the whole-program idea rule out ever updating a running
+%   system in place, which Erlang is famous for?
+
+\section{Programs as proofs}
+
+Silica's type system is designed with a deep idea from logic in mind: that a
+type can be read as a claim and a program as its proof. The project is candid
+that this is a direction rather than a destination; no machine-checked proofs
+come out of the compiler yet. Where the direction leads is a reversal of the
+usual order of work: a proof of correctness written first, by a human who answers
+for it, and code written afterwards, possibly by a model, to satisfy it
+(Chapter~\ref{ch:memory}).
+
+\section{Evidence over assertion}
+
+Every claim the compiler makes about itself is tested. Tens of thousands of
+small programs, each with its expected result, decide whether a change is
+finished, and it is not finished until they pass on every kind of machine it
+might affect. The compiler itself is the largest test. Written in Silica, it
+compiles itself, and it is accepted only when the compiler it produces, compiling
+itself again, gives back exactly the same result, byte for byte. That was first
+achieved on 12~September 2026.
+
+% TODO-INTERVIEW: Take me to the day of the first byte-for-byte match.
+
+\section{What it costs}
+
+A strict compiler is a demanding companion. Code that would run elsewhere is
+refused here until it is clean. Familiar escape hatches are missing. And the
+standard is costly to uphold: tens of thousands of tests, run on every platform,
+for every change.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{Performance you can trust.} When nothing is rewritten behind
+        the programmer's back, what is written is what runs.
+  \item \textbf{Fewer places for attacks to start.} The routines where
+        hand-written mistakes most often become security holes---checking
+        incoming data, copying messages, releasing memory---are generated by
+        the compiler from what the program declares, the same way every time,
+        instead of being written anew by each programmer.
+  \item \textbf{Builds you can verify.} A compiler that reproduces itself
+        exactly is a foundation for checking that the software you run is the
+        software you meant---a growing concern for anyone worried about
+        tampered tools.
+  \item \textbf{A road to proof.} A language shaped for proof from the start
+        can grow into one that proves things, without a redesign.
+\end{itemize}
+
+% TODO-INTERVIEW: What does a compiler that refuses make possible for teams,
+%   or for students, that a generous one does not?

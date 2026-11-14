@@ -1,0 +1,76 @@
+% =====================================================================
+%  Chapter 1 — also serves as a showcase of every book element.
+%  Replace the sample content once the look is settled.
+% =====================================================================
+\chapter{Chapter 1 Title}
+\label{ch:01}
+
+This opening chapter demonstrates each element the book supports.
+Body text is set in EB Garamond with old-style figures such as 1984 and
+2026.\footnote{This is an ordinary footnote. It appears at the bottom of
+the page and is numbered per chapter.} A second footnote shows how
+numbering continues.\footnote{Footnotes can run to several lines without
+trouble; the hanging indent keeps the number clear of the text so that
+the note remains easy to scan.}
+
+\aside{This is a margin aside. Short notes sit in the wide outer margin,
+beside the line where they are called.}
+Margin asides are created with the \verb|\aside| command. They always
+appear in the outer margin, on the right of odd pages and the left of
+even pages.
+
+\section{Charts}
+
+Charts are drawn with \textsf{pgfplots}, reading their numbers from CSV
+files in the \texttt{data/} folder, as in Figure~\ref{fig:sample-chart}.
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/sample-chart}
+  \caption{A sample chart drawn from \texttt{data/sample.csv}.}
+  \label{fig:sample-chart}
+\end{figure}
+
+\section{Diagrams}
+
+Diagrams are drawn with Ti\emph{k}Z. Figure~\ref{fig:sample-diagram}
+uses the book's colour palette.
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/sample-diagram}
+  \caption{A sample Ti\emph{k}Z diagram.}
+  \label{fig:sample-diagram}
+\end{figure}
+
+\section{Sidebars}
+
+A boxed sidebar sets material apart from the main argument.
+
+\begin{sidebox}[A Sidebar Title]
+  Sidebars break across pages when necessary and accept an optional
+  title. This note uses \verb|\boxfootnote|, so its note goes to
+  the bottom of the page.\boxfootnote{A footnote called from inside
+  a sidebox, numbered with the chapter's other footnotes.}
+\end{sidebox}
+
+\begin{sidebox}
+  A sidebar may also be untitled.
+\end{sidebox}
+
+\section{Wide material}
+
+When a chart needs more room, the \texttt{wide} environment lets it
+extend into the outer margin.
+
+\begin{figure}[htbp]
+  \begin{wide}
+    \centering
+    \input{figures/sample-chart}
+    \caption{The same chart set full width.}
+    \label{fig:sample-chart-wide}
+  \end{wide}
+\end{figure}
+
+After the figures, footnote numbering carries on as
+expected.\footnote{The fourth footnote of this chapter.}

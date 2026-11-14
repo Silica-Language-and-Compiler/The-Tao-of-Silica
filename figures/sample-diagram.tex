@@ -1,0 +1,16 @@
+% Sample TikZ diagram
+\begin{tikzpicture}[
+    node distance=6mm and 8mm,
+    box/.style={draw=taoaccent, thick, rounded corners=2pt, fill=taopaper,
+                minimum width=18mm, minimum height=8mm, font=\small},
+    arrow/.style={-{Stealth[length=2mm]}, taoink!70, thick},
+  ]
+  \node[box] (sand) {Sand};
+  \node[box, right=of sand] (silicon) {Silicon};
+  \node[box, right=of silicon] (chip) {Chip};
+  \node[box, below=of silicon] (thought) {Thought};
+  \draw[arrow] (sand) -- (silicon);
+  \draw[arrow] (silicon) -- (chip);
+  \draw[arrow] (chip) |- (thought);
+  \draw[arrow, dashed] (thought) -| (sand);
+\end{tikzpicture}

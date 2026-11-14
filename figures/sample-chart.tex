@@ -1,0 +1,13 @@
+% Sample pgfplots chart reading data/sample.csv
+\begin{tikzpicture}
+  \begin{axis}[
+    width=\linewidth, height=0.65\linewidth,
+    xlabel={Year}, ylabel={Value},
+    xticklabel style={/pgf/number format/1000 sep=}, xtick distance=4,
+    grid=major, legend pos=north west, legend style={draw=none, font=\footnotesize},
+  ]
+    \addplot table[x=year, y=seriesA, col sep=comma] {data/sample.csv};
+    \addplot table[x=year, y=seriesB, col sep=comma] {data/sample.csv};
+    \legend{Series A, Series B}
+  \end{axis}
+\end{tikzpicture}

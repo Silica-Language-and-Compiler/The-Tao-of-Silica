@@ -1,0 +1,106 @@
+% =====================================================================
+%  Chapter 11 — Principle: Fidelity (Respect the Machine)
+%  Map: research/chapter-map.md (Chapter 11)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Respect the Machine}
+\chapter{Fidelity}
+\label{ch:machines}
+
+The C language was designed in the early 1970s for a minicomputer called the
+PDP-11, and in a real sense almost every mainstream language since has
+inherited its picture of a computer: one processor, one flat expanse of memory,
+instructions carried out one after another. The chips on sale today look
+nothing like that. They have many cores, units that work on many values at
+once, hardware that tags memory and signs pointers to catch attacks, and memory
+of different kinds with different properties. Silica is designed to be faithful
+to the machines we actually have, not to a portable memory of the ones we
+used to have.\footnote{\src{silica/docs/design-principles.md}, line 67.}
+
+\section{The machine as it is}
+
+Fidelity means that what the hardware offers, the language can reach. Different
+kinds of memory are distinct in the language because they are distinct in the
+chip. Hardware features for safety and speed are treated as part of the world a
+language should address, not as exotic extensions bolted on later. Even small
+rules are taken from real hardware rather than from tradition.
+
+This is what catches the attention of the bare-metal programmers who do look at
+Silica. Every board and every chip exposes behaviours that, in C, they could
+reach only with great difficulty, if at all. In Silica they can state the
+reality of the device directly: that this memory is of one kind and that memory
+of another, that the chip itself enforces atomic access here, that pointers are
+audited by the hardware there. Being able to say what the chip actually
+guarantees, in the language rather than in comments and conventions, is what
+resonates most.\footnote{Interview, 2026-11-13.}
+
+% TODO-INTERVIEW: Is "modern chips" really "ARM first"? How do you weigh
+%   fidelity to one family of chips against portability?
+% TODO-INTERVIEW: A specific board and behaviour someone could finally express
+%   in Silica, and their reaction.
+
+\section{Owning the last step}
+
+Most new languages hand their final step---turning a program into machine
+instructions---to a shared toolkit, usually LLVM. Silica used LLVM only to get
+started, and dropped it as soon as the compiler written in Silica could produce
+machine instructions itself. The reason was not speed of compilation. It was
+that a compiler which owns the last step can reason about the real properties
+of the chip, rather than about a toolkit's generalised picture of one.
+
+\section{Bare metal first}
+
+Silica describes itself as a language for building systems directly on the
+hardware, which also happens to run under ordinary operating systems. Its
+history bears that out. Bringing it to a small microcontroller, the project
+chose at each turn the harder and more faithful path: generating the chip's own
+instructions rather than translating another chip's, running with no vendor
+software or operating system underneath, and testing on real boards rather
+than simulations. A thousand actors now run on a board with half a megabyte of
+memory. More boards followed.
+
+% TODO-INTERVIEW: Why choose the harder path each time?
+
+\section{Honest where control is shared}
+
+On a laptop or a server, the operating system holds some of the control a
+systems language would want, deciding how memory behaves and where work runs.
+Silica says so, rather than pretending its promises hold equally everywhere
+(Chapter~\ref{ch:hidden}). Each kind of machine refuses, when the program is
+built, whatever it cannot honestly do, and accepts or refuses programs for the
+same reasons on every machine.
+
+\section{Measure first}
+
+Silica's design documents share a habit: describe the present as measured
+before proposing a change, and give numbers only where they have been checked.
+Several designs in the project's history were withdrawn the moment the
+measurements came in.
+
+\section{What it costs}
+
+Faithfulness to real hardware means more work for every new kind of machine,
+and fewer shortcuts borrowed from shared toolkits and vendor software. It also
+means being honest that a laptop cannot offer everything a bare board can.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{One language from the badge to the data centre.} The same
+        ideas, and the same programs, can run on a microcontroller and on a
+        server.
+  \item \textbf{Hardware safety, put to use.} Chip features that catch memory
+        attacks can become guarantees of the language rather than optional
+        extras few programs use.
+  \item \textbf{Freedom from vendor lock-in.} Running directly on the
+        hardware, without a vendor's software stack, keeps a device's
+        behaviour in its maker's hands.
+  \item \textbf{Teaching on real machines.} Inexpensive boards become places
+        to learn how computers really work, using the same language
+        professionals use.
+\end{itemize}
+
+% TODO-INTERVIEW: What would you most like to see built on small boards
+%   with Silica?

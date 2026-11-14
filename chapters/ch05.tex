@@ -1,0 +1,161 @@
+% =====================================================================
+%  Chapter 5 — Principle: Independence (Share Nothing)
+%  Map: research/chapter-map.md (Chapter 5)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Share Nothing}
+\chapter{Independence}
+\label{ch:actors}
+
+A Silica program is not a tree of procedures calling procedures. It is a
+society of independent actors, each with its own private state, that cooperate
+by sending one another messages. No actor can reach into another's memory.
+Independence is the normal case; sharing is a rare, deliberate exception.
+
+\section{A borrowed idea, made native}
+
+The idea comes from Erlang, and Silica makes no secret of the debt. Erlang's
+designers built telephone switches that had to keep running for years, and they
+found that independence was the foundation of reliability: if nothing is
+shared, one failure cannot spread.
+
+What Silica changes is where the idea can live. Erlang's actors depend on a
+virtual machine and a garbage collector. Silica's are compiled directly to the
+machine, with neither, so the same model can run on a server or on a
+microcontroller small enough to fit on a badge.
+
+\section{What SwErl taught}
+
+Barney had tried once before to carry Erlang's model somewhere new. SwErl
+brought it into Swift, and Barney counts it a good first exploration that taught
+four lessons quickly.\footnote{Interview, 2026-11-13.}
+
+The first was that supervisors were nearly impossible to build as a library.
+There was no clean way for a crashing actor to report to its supervisor before
+it disappeared, and without that report a supervisor cannot do a good job of
+restarting what failed. The second was how little an actor really needs: a
+stored state and a function, nothing more. There is no need for a hand-written
+lock to make it wait for a message, and no need for some intermediate state in
+which it has been spawned but is merely alive, waiting to be moved off a thread.
+The third followed from the second: actors can be fairly simple to implement.
+The fourth was a warning. Barney built something like traits, modelled on the
+templates Erlang uses for its standard behaviours, but it was cumbersome, and
+the results were uncomfortable.
+
+A language can settle what a library cannot. Because Barney was writing
+Silica's compiler, failure reporting could be built on whatever the chips and
+operating systems themselves are able to report, and supervision became
+possible from the start (Chapter~\ref{ch:failsoft}). Actors became a stored
+state and a function, and traits found a cleaner form in the language itself.
+
+\section{Any function can stand alone}
+
+In Silica, being an actor is not a special kind of code. An ordinary function
+that knows how to handle one message becomes an independent actor when the
+program starts it as one. The runtime does the repetitive work of waiting for
+the next message. The architecture of a Silica application is therefore its
+society of actors, not its call graph, and its starting point is small: it
+starts the society and steps aside.
+
+\section{Don't wait by the phone}
+
+When one actor needs something from another, Silica prefers that it send a
+request and carry on, letting the answer arrive as a message of its own. The
+documents compare this to texting: few people send a message and then freeze
+until the reply comes.\footnote{\src{silica/docs/learn-silica.md}, line 913.}
+Waiting is possible; it is simply not the first choice.
+
+Messages are copies. Nothing a sender puts in a message remains shared with it,
+so the sender's memory can be released at once and neither side can disturb the
+other.
+
+\section{Independence at scale}
+
+Independence is only useful if it is cheap. When Silica's hosted runtime gave
+every actor its own operating-system thread, the model could not reach the
+numbers Erlang programmers take for granted. In September 2026 one of the AI
+agents working on the project proposed scaling the promise back and offering
+massive concurrency as a library instead. Barney refused. Actors bound one to
+one to threads would be nothing but a fancy facade for a thread, and a language
+that called them actors would be telling a lie.\footnote{``They would be false
+and untruthful.'' Interview, 2026-11-13.} In October 2026 the runtime was
+rebuilt so that many actors share each thread. A single machine then held a
+million idle actors.
+
+\section{The end of one size fits all}
+
+One difference from Erlang is deliberate. Erlang's runtime moves work between
+processor cores as it sees fit. Silica's never moves an actor on its own; the
+program decides where its actors run, and the decision stays visible. The reason
+is the principle of Chapter~\ref{ch:hidden}: nothing hidden. Any programmer can
+write the balancing scheme that best fits the application at hand and the
+larger problem it solves.
+
+Behind that choice is a larger idea. One-size-fits-all solutions served
+computing well for decades, because code was expensive to write and every
+special case cost human effort. With code now generated quickly, Barney is no
+longer convinced. The same reasoning reaches even the language: Silica and its
+compiler can reasonably be forked when a need demands it, for instance to give
+an application its own way of packaging and transporting data.
+
+The obvious objection is that forks fragment a community, and that shared
+libraries, knowledge and tools are what make a language ecosystem valuable.
+Barney's answer is that the objection was right in the past. Communities still
+form around shared knowledge, but the knowledge itself is changing. It is
+becoming knowledge of how to shape the language to make a particular piece of
+silicon do what is needed this time, rather than knowledge of how to bend a
+library to fit.\footnote{``how do I get this piece of rock to do what I need it
+to this time?'' Interview, 2026-11-13.} Libraries will still exist and still be
+shared. The difference is that anyone can adapt one to the exact, direct need of
+the problem in front of them, because of the language models now available.
+
+\section{What it costs}
+
+Thinking in independent actors is a different discipline from thinking in
+procedures, and it must be learned. Copying messages costs time and memory that
+sharing would save. And where Erlang offers automatic conveniences, such as
+balancing load across cores, Silica asks the program to decide, which is work
+someone must do.
+
+\section{What it opens up}
+
+Nearly all systems built today are static, and Barney sees that as an accident
+of history: machines were slow and weak, and humans writing code were the
+bottleneck. Cheap, independent actors invite a different kind of system. Barney
+pictures millions of distributed nodes, each spawning actors, using them once
+and discarding them, around a smaller number of actors that persist.
+
+Erlang's networks of machines, a work of genius and the inspiration for all of
+this, were designed for stable, safe environments. That is not the world
+devices live in now. Devices are not always on, and networks are not always
+there. A phone moves from Ethernet to Wi-Fi to Bluetooth in the middle of a
+conversation with a single other device. Phones reboot; a phone call stops the
+apps running on it. BEAM\_SEMP took Erlang's ideas a step further, toward
+systems designed for exactly that churn, and Silica carries the idea on
+(Chapter~\ref{ch:transport}).
+
+\begin{itemize}
+  \item \textbf{Architecture that matches intuition.} People already know how
+        to think about friends who keep their own counsel and pass messages.
+        A program shaped that way is easier to explain, to teach and to
+        reason about.
+  \item \textbf{One actor per thing.} When actors cost almost nothing, a
+        design can give one to every connection, every sensor, every user or
+        every task, and let each fail or succeed alone.
+  \item \textbf{Every core, used safely.} Independent actors spread across
+        processor cores without locks, without races and without the classic
+        bugs of shared memory.
+  \item \textbf{A model from the badge to the data centre.} The same design
+        runs on a microcontroller and a server, so one way of thinking
+        covers both.
+  \item \textbf{Boundaries for security.} An actor that cannot touch another's
+        memory is also an actor that cannot steal from it.
+  \item \textbf{Systems built for churn.} Applications can be made of actors
+        that come and go as devices sleep, wake, roam between networks and
+        restart, instead of assuming a stable world.
+\end{itemize}
+
+Where this leads, in Barney's imagination, is beyond the operating system
+itself. Chapter~\ref{ch:transport} ends there.

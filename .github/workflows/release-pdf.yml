@@ -1,0 +1,62 @@
+# Builds the book with LuaLaTeX (via latexmk and .latexmkrc) and:
+#   - on a pushed tag (draft-* or v*): creates a GitHub release for that tag
+#     and attaches the PDF. draft-* tags are marked as pre-releases.
+#   - on a manual run (Actions tab → "Run workflow"): builds the PDF and
+#     uploads it as a downloadable build artifact, with no release.
+#
+# Release a draft:
+#   git tag draft-2026-11-20
+#   git push origin draft-2026-11-20
+
+name: Build PDF and release
+
+on:
+  push:
+    tags:
+      - "draft-*"
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to create releases and upload the PDF
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Full TeX Live: LuaLaTeX, EB Garamond, memoir, pgfplots, tcolorbox, ...
+    container: texlive/texlive:latest
+    steps:
+      - name: Check out the book
+        uses: actions/checkout@v4
+
+      - name: Build the book
+        run: latexmk
+
+      - name: Name the PDF
+        id: pdf
+        shell: bash
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            label="$GITHUB_REF_NAME"
+          else
+            label="build-${GITHUB_SHA::7}"
+          fi
+          file="The-Tao-of-Silica-${label}.pdf"
+          cp build/main.pdf "$file"
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the PDF as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: the-tao-of-silica-pdf
+          path: ${{ steps.pdf.outputs.file }}
+
+      - name: Create the release and attach the PDF
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          name: The Tao of Silica — ${{ github.ref_name }}
+          files: ${{ steps.pdf.outputs.file }}
+          prerelease: ${{ startsWith(github.ref_name, 'draft-') }}
+          body: |
+            PDF of *The Tao of Silica*, built automatically from tag `${{ github.ref_name }}`.

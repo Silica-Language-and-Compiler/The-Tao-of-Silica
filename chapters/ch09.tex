@@ -1,0 +1,123 @@
+% =====================================================================
+%  Chapter 9 — Principle: Accountability (Make Danger Visible)
+%  Map: research/chapter-map.md (Chapter 9)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Make Danger Visible}
+\chapter{Accountability}
+\label{ch:danger}
+
+\epigraph{An erroneously implemented native function can cause a VM internal
+state inconsistency, which can cause a crash of the VM, or miscellaneous
+misbehaviors of the VM at any point after the call to the native function.}
+{Erlang/OTP documentation, \code{erl_nif}}
+
+No useful language can refuse all contact with the outside world. Operating
+systems, device drivers and decades of trusted libraries are written in C. The
+question is not whether a program will ever touch unsafe code. It is whether
+anyone responsible for the program will know.
+
+\section{Unsafe impedance}
+
+The 2024 paper that opens this book's story (Chapter~\ref{ch:why}) measured
+languages by how hard they make it to write, load and hide unsafe code. Its
+complaints were mostly about visibility. Some languages gave no sign at all
+that a piece of code relied on something unsafe. Others gave a sign too quiet
+for a newcomer to notice. Rust's own guidance encouraged libraries to wrap
+unsafe internals in a safe-looking surface. Even Erlang, the paper's
+best-rated platform, let ordinary code call native functions with no warning
+that it was doing so.
+
+The paper's remedy was a human process: no engineer could add native code
+alone, and a deliberately skeptical review had to approve it. It also admitted
+the limit of any such process. People can make unsafe code rarer; they cannot
+make it impossible.\footnote{``Business practices such as UAPs can not
+guarantee code safety, only reduce the probability.''}
+
+\section{From process to compiler}
+
+Silica moves that review into the language. Its bridge to foreign code is
+named Fifi, after a poodle that looks cuddly and bites when you pet
+it.\footnote{\src{silica/docs/index.md}, line 40.} Any part of a program that
+uses foreign code must say so in its very name, with the prefix
+\code{dangerous_}, and so must every part that uses \emph{that}, all the way up to
+the program as a whole. Danger cannot be wrapped, inherited quietly or buried in
+a dependency. Putting the marker in names, rather than among the other effects a
+piece of code declares, keeps it pure signal that can never be lost in noise. Foreign code runs only in separate workers set aside for it, data
+it returns is treated with suspicion, and other languages cannot call into
+Silica at all. If the foreign code crashes, only its worker fails, and its
+supervisor restarts it (Chapter~\ref{ch:failsoft}).
+
+Fifi does not claim to make foreign code safe. Its design says plainly that it
+is not a sandbox. What it promises is that the boundary cannot be hidden.
+
+\section{A bridge, reluctantly built}
+
+Fifi was not part of the original plan. Silica's founding notes refused any
+connection to C at all, and Barney did not want to add one. What changed the
+decision was a picture of the people Silica most needed to reach: the academics
+and professionals who write the code that runs directly on boards and bare
+computers. Those boards are everywhere. They control cars, electrical and water
+systems, networks, and most of the computers people touch every day.
+
+Barney knew many of these programmers, and knew how deep their roots in C run,
+along with the habit of picturing hardware as the PDP-11 once was. Persuading
+them even to look at another language would be long, hard work, and so far, for
+most of them, it has been. A language that demanded they abandon every line of C
+at once would never be tried. Fifi lets them move over gradually, keeping the
+foreign code they cannot yet replace, while making its danger impossible to
+miss.\footnote{Interview, 2026-11-13.}
+
+The same honesty that shaped the 2024 paper shaped this decision. Barney could
+not claim that the BEAM languages were perfect, and does not claim it of Silica
+either. Fifi is a compromise, and Silica says so in the name of every module that
+uses it.
+
+\section{What SEMP left behind}
+
+The BEAM\_SEMP project of 2025 spent two months removing dangerous defaults
+from a running Erlang system: stopping peers from creating new names, from
+loading code, from calling functions remotely. In Silica, most of those
+defaults never exist in the first place. There was nothing to remove.
+
+% TODO-INTERVIEW: SEMP judged peers by their behaviour over time. Silica has
+%   no counterpart yet. Dropped, or waiting?
+
+\section{Authority you can see}
+
+The direction of travel goes further: a program should be able to do only what
+the parts it has been given are able to do, and that authority should be
+visible in the design. Much of this is planned rather than built, and the
+documents say so.
+
+% TODO-VERIFY: Keep status current: capabilities, brokered isolation, TLS and
+%   the crypto proposal were design-only as of 2026-11-13.
+
+\section{What it costs}
+
+Visibility is uncomfortable. Using one foreign library renames everything
+above it, and that is the point: the inconvenience is the signal. Some things
+that are easy in other languages, such as letting outside code call in, are
+simply not offered.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{Audits by search.} Whether a release contains foreign code is
+        answered by searching for one word, not by reverse-engineering its
+        build.
+  \item \textbf{Supply chains that show themselves.} A dependency that brings
+        in unsafe code cannot arrive unannounced; its presence changes the
+        names of everything that relies on it.
+  \item \textbf{Policies that can be enforced.} An organisation can decide
+        that a product contains no foreign code, or only approved foreign
+        code, and check the decision mechanically.
+  \item \textbf{An answer to the regulators' question.} Governments now ask
+        software makers to be secure by design. A language that makes danger
+        visible gives them evidence rather than assurances.
+\end{itemize}
+
+% TODO-INTERVIEW: Who do you most want to read this chapter — engineers,
+%   managers, or the people writing security policy?

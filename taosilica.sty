@@ -1,0 +1,261 @@
+% =====================================================================
+%  taosilica.sty — house style for "The Tao of Silica"
+%  Built on the memoir class. Compile with LuaLaTeX (see .latexmkrc).
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{taosilica}[2026/11/13 House style for The Tao of Silica]
+
+\RequirePackage{iftex}
+\RequireLuaTeX
+
+% ---------------------------------------------------------------------
+%  Page geometry: 6in x 9in trade trim, wide outer margin for asides
+% ---------------------------------------------------------------------
+\setstocksize{9in}{6in}
+\settrimmedsize{\stockheight}{\stockwidth}{*}
+\settrims{0pt}{0pt}
+\setlrmarginsandblock{0.7in}{1.55in}{*}     % inner (spine), outer (edge)
+\setulmarginsandblock{0.8in}{0.85in}{*}     % top, bottom
+\setmarginnotes{0.15in}{1.15in}{\onelineskip} % sep, width, push
+\setheadfoot{\onelineskip}{2\onelineskip}
+\setheaderspaces{*}{1.5\onelineskip}{*}
+\checkandfixthelayout
+\strictpagecheck   % margin notes always land in the outer margin
+
+% ---------------------------------------------------------------------
+%  Fonts (EB Garamond ships with TeX Live / MacTeX)
+% ---------------------------------------------------------------------
+\RequirePackage{fontspec}
+\setmainfont{EBGaramond}[
+  Extension      = .otf,
+  UprightFont    = *-Regular,
+  ItalicFont     = *-Italic,
+  BoldFont       = *-Bold,
+  BoldItalicFont = *-BoldItalic,
+  Numbers        = OldStyle,
+]
+\newfontfamily\liningfigures{EBGaramond}[
+  Extension = .otf, UprightFont = *-Regular, ItalicFont = *-Italic,
+  BoldFont = *-Bold, BoldItalicFont = *-BoldItalic, Numbers = Lining,
+]
+\RequirePackage{microtype}
+\setlength{\emergencystretch}{3em} % narrow measure + unbreakable code words
+
+% ---------------------------------------------------------------------
+%  Colour palette
+% ---------------------------------------------------------------------
+\RequirePackage{xcolor}
+\definecolor{taoaccent}{HTML}{2E6B5E}   % muted jade
+\definecolor{taoink}{HTML}{222222}
+\definecolor{taopaper}{HTML}{F4F7F5}
+
+% ---------------------------------------------------------------------
+%  Graphics, diagrams and charts
+% ---------------------------------------------------------------------
+\RequirePackage{graphicx}
+\graphicspath{{images/}{figures/}}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,positioning,shapes.geometric,arrows.meta,fadings,graphs}
+\RequirePackage{pgfplots}
+\pgfplotsset{
+  compat=1.18,
+  every axis/.append style={
+    font=\small\liningfigures,
+    axis line style={taoink!70},
+    tick style={taoink!70},
+    grid style={taoink!15},
+    /pgf/number format/assume math mode=true, % tick numbers in the text font
+  },
+  cycle list={
+    {taoaccent, thick, mark=*},
+    {taoink!70, thick, dashed, mark=square*},
+    {taoaccent!50, thick, mark=triangle*},
+  },
+}
+\RequirePackage{booktabs}
+\RequirePackage{csvsimple}
+
+% Full-width environment: lets a wide chart or table extend into the
+% outer margin. Usage: \begin{wide} ... \end{wide}
+\newenvironment{wide}
+  {\begin{adjustwidth*}{0pt}{-\dimexpr\marginparsep+\marginparwidth\relax}}
+  {\end{adjustwidth*}}
+
+% ---------------------------------------------------------------------
+%  Chapter style
+% ---------------------------------------------------------------------
+% Optional subtitle printed under the next chapter title (not in the TOC
+% or running heads). Usage: \chaptersubtitle{Hide Nothing}\chapter{Honesty}
+\newcommand*{\tao@subtitle}{}
+\newcommand{\chaptersubtitle}[1]{\gdef\tao@subtitle{#1}}
+
+\makechapterstyle{tao}{%
+  \chapterstyle{default}
+  \setlength{\beforechapskip}{2\onelineskip}
+  \setlength{\midchapskip}{0.5\onelineskip}
+  \setlength{\afterchapskip}{3\onelineskip}
+  \renewcommand*{\chapnamefont}{\normalfont\large\scshape\color{taoaccent}}
+  \renewcommand*{\chapnumfont}{\normalfont\large\color{taoaccent}}
+  \renewcommand*{\printchaptername}{\chapnamefont\MakeLowercase{\chaptername}}
+  \renewcommand*{\chaptitlefont}{\normalfont\Huge}
+  \renewcommand*{\printchaptertitle}[1]{%
+    {\chaptitlefont ##1\par}%
+    \ifx\tao@subtitle\@empty\else
+      \vskip 0.35\onelineskip
+      {\normalfont\Large\itshape\color{taoink!80}\tao@subtitle\par}%
+      \global\let\tao@subtitle\@empty
+    \fi
+    \vskip 0.75\onelineskip
+    {\color{taoaccent}\rule{0.25\textwidth}{0.6pt}}\par}
+}
+\chapterstyle{tao}
+
+\setsecheadstyle{\normalfont\Large\raggedright}
+\setsubsecheadstyle{\normalfont\large\itshape\raggedright}
+\setsecnumdepth{subsection}
+\settocdepth{section}
+
+% ---------------------------------------------------------------------
+%  Running heads
+% ---------------------------------------------------------------------
+\makepagestyle{tao}
+\makepsmarks{tao}{%
+  \createmark{chapter}{both}{nonumber}{}{}%
+  \let\sectionmark\@gobble % running heads show the chapter title only
+  \createplainmark{toc}{both}{\contentsname}%
+  \createplainmark{lof}{both}{\listfigurename}%
+}
+\makeevenhead{tao}{\liningfigures\thepage}{}{\small\scshape\MakeLowercase{\booktitle}}
+\makeoddhead{tao}{\small\scshape\MakeLowercase{\rightmark}}{}{\liningfigures\thepage}
+\makeevenfoot{tao}{}{}{}
+\makeoddfoot{tao}{}{}{}
+\makeheadposition{tao}{flushright}{flushleft}{}{}
+\nouppercaseheads
+\pagestyle{tao}
+
+% Epigraphs (memoir)
+\setlength{\epigraphwidth}{0.75\textwidth}
+\epigraphposition{flushright}
+\epigraphtextposition{flushleftright}
+\epigraphsourceposition{flushright}
+\setlength{\epigraphrule}{0pt}
+\renewcommand{\epigraphsize}{\small\itshape}
+\copypagestyle{chapter}{plain}
+\makeoddfoot{chapter}{}{\liningfigures\thepage}{}
+\makeevenfoot{chapter}{}{\liningfigures\thepage}{}
+
+% ---------------------------------------------------------------------
+%  Footnotes (numbered per chapter — memoir's default)
+%  Hanging style: number flush left, text indented.
+% ---------------------------------------------------------------------
+\footmarkstyle{\liningfigures#1.\hfill}
+\setlength{\footmarkwidth}{1.4em}
+\setlength{\footmarksep}{-\footmarkwidth}
+\setlength{\footparindent}{1em}
+\renewcommand*{\foottextfont}{\footnotesize}
+\setlength{\skip\footins}{1.25\onelineskip}
+% To number footnotes continuously through the book instead, uncomment:
+% \counterwithout{footnote}{chapter}
+
+% ---------------------------------------------------------------------
+%  Margin asides: \aside{short note}
+% ---------------------------------------------------------------------
+\newcommand{\aside}[1]{%
+  \marginpar{\footnotesize\raggedright\color{taoink!85}#1}}
+
+% ---------------------------------------------------------------------
+%  Boxed sidebars (environment "sidebox"; memoir already owns "sidebar"):
+%    \begin{sidebox}[Optional title] ... \end{sidebox}
+%  A plain \footnote inside a sidebox appears at the bottom of the box.
+%  \boxfootnote{...} puts the note at the bottom of the page instead,
+%  numbered in sequence with the chapter's other footnotes.
+% ---------------------------------------------------------------------
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{etoolbox}
+
+\newcommand*{\tao@sbnotes}{}
+\newcommand{\boxfootnote}[1]{%
+  \stepcounter{footnote}%
+  \footnotemark[\value{footnote}]%
+  \xappto\tao@sbnotes{\noexpand\footnotetext[\the\value{footnote}]}%
+  \gappto\tao@sbnotes{{#1}}%
+}
+\newcommand*{\tao@flushsbnotes}{\tao@sbnotes\gdef\tao@sbnotes{}}
+
+\NewTColorBox{sidebox}{ o }{%
+  enhanced, breakable,
+  colback=taopaper, colframe=taoaccent,
+  boxrule=0pt, leftrule=2pt, arc=0pt, outer arc=0pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=\onelineskip, after skip=\onelineskip,
+  fontupper=\small,
+  IfValueT={#1}{
+    title={#1}, coltitle=taoaccent, colbacktitle=taopaper,
+    fonttitle=\normalsize\scshape, attach title to upper={\par\smallskip},
+  },
+  after app={\tao@flushsbnotes},
+}
+
+% ---------------------------------------------------------------------
+%  Cover page — full-bleed image behind the title text
+%  Set the image in main.tex with \setcoverimage{images/cover.jpg}.
+%  Ideal image: portrait 2:3, at least 1800 x 2700 px (300 dpi at 6x9in).
+%  If the file is missing, a solid colour is used as a placeholder.
+% ---------------------------------------------------------------------
+\newcommand*{\tao@coverimage}{images/cover.jpg}
+\newcommand*{\setcoverimage}[1]{\renewcommand*{\tao@coverimage}{#1}}
+
+\newcommand{\makecover}{%
+  \begingroup
+  \thispagestyle{empty}%
+  \begin{tikzpicture}[remember picture, overlay]
+    % Background picture (clipped to the page)
+    \begin{scope}
+      \clip (current page.south west) rectangle (current page.north east);
+      \IfFileExists{\tao@coverimage}{%
+        \node[inner sep=0pt] at (current page.center)
+          {\includegraphics[height=\paperheight]{\tao@coverimage}};
+      }{%
+        \fill[taoaccent!70!black]
+          (current page.south west) rectangle (current page.north east);
+      }
+      % Gentle darkening toward the top so the title stays legible
+      \fill[black, path fading=south, opacity=0.55]
+        (current page.north west) rectangle
+        ($(current page.east)+(0,0.5in)$);
+    \end{scope}
+    % Title block
+    \node[anchor=north, text=white, align=center, text width=0.8\paperwidth]
+      at ($(current page.north)+(0,-1.4in)$) {%
+        {\fontsize{22}{26}\selectfont\booktitletop\par}
+        \vspace{2pt}
+        {\fontsize{72}{76}\selectfont\booktitlemain\par}
+        \vspace{14pt}
+        {\color{white!80}\rule{0.25\paperwidth}{0.6pt}\par}
+        \vspace{12pt}
+        {\Large\itshape\booksubtitle\par}
+      };
+    % Author
+    \node[anchor=south, text=white, align=center]
+      at ($(current page.south)+(0,0.9in)$)
+      {\Large\scshape\bookauthor};
+  \end{tikzpicture}%
+  \null\clearpage
+  \endgroup
+}
+
+% ---------------------------------------------------------------------
+%  Hyperlinks and PDF metadata (load late)
+% ---------------------------------------------------------------------
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{bookmark}
+
+% Inline code and source paths. \code{dangerous_*} needs no escaping;
+% \src{path/to/file.md} also breaks long paths across lines.
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\DeclareUrlCommand\src{\urlstyle{tt}}
+\AtBeginDocument{%
+  \hypersetup{pdftitle={\booktitle}, pdfauthor={\bookauthor},
+              pdfsubject={\booksubtitle}}}
+
+\endinput

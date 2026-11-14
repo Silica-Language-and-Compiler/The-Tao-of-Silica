@@ -1,0 +1,160 @@
+% =====================================================================
+%  Chapter 2 — How We Got Here
+%  Map: research/chapter-map.md (Chapter 2); main source research/silica-history.md
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+%  Caution: "Phase 1/2" of the compiler ≠ "Phases 2–8" of chunk 15.
+% =====================================================================
+\chapter{How We Got Here}
+\label{ch:history}
+
+Silica's repository holds 686 commits made between 26~December 2025 and
+13~November 2026. A year is not long for a programming language. But the ideas
+in those commits are older than the repository, and the story starts earlier,
+in four projects that each tried to fix something from the inside.
+
+\section{Before Silica}
+
+\subsection{SwErl, 2023--2025}
+
+SwErl began in February 2023 as a library that brought Erlang's model of
+concurrency into Swift: lightweight processes, message sending, and the
+standard design patterns Erlang programmers rely on. Its argument was that async/await and promises try to make
+concurrent code look sequential, and that this works until something goes
+wrong.\footnote{SwErl README, ``Painless Concurrency'':
+\src{https://github.com/inter-erlang/SwErl}.} Students contributed to it, and in
+2024 a branch could already speak Erlang's distribution protocol.
+
+SwErl also showed what a library cannot do. Swift's own dictionaries crashed
+under concurrent access, so the registry of processes had to be rebuilt more
+than once. There were no supervisors. Messages were untyped, so every handler
+began by casting. The networking code only compiled on Apple platforms. In
+September 2025 the unfinished node work was handed to a different project.
+
+% TODO-INTERVIEW: What did SwErl teach you that you could only have learned by
+%   building it inside someone else's language? Is Silica SwErl's answer?
+
+\subsection{Unsafe Impedance, 2024}
+
+The paper described in Chapter~\ref{ch:why} began with a request from a member
+of the Erlang Ecosystem Foundation at CodeBEAM in San Francisco. It was outlined
+in March 2024, submitted in May and presented in Milan that September. Its first
+outline celebrated how Erlang and Elixir avoid common memory errors. The finished
+paper followed the evidence further: native functions loaded into the BEAM can
+break every guarantee the VM offers, and they can be hidden from the Erlang code
+that calls them.
+
+% TODO-VERIFY: CodeBEAM San Francisco year (likely March 2024).
+
+\subsection{BEAM\_SEMP, 2025}
+
+From late August to October 2025, Barney built a secure overlay for Erlang
+networking. Its trust layer used mutual TLS, admitted peers only by certificate
+fingerprint, and kept a deny list that overrode even trusted peers: no remote
+code loading, no atom creation, no loading of native code. One module switched
+off Erlang's standard distribution entirely. Errors were never sent back to a
+peer. It worked, and every part of it was a patch on top of permissive defaults.
+
+\subsection{A Rust BEAM, and a recovery, 2025}
+
+Through 2025, Barney was also porting the BEAM's virtual machine from C to Rust,
+to answer the people who asked how Erlang could be memory safe when its virtual
+machine was written in C. In June of that year Barney had a mini-stroke, which
+for a time took away the ability to read, to think about complex things and to
+form sentences easily. The work on the port became part of the recovery, and
+language models wrote much of the code Barney could not yet write. On
+24~December 2025, well into the port, Barney realised it was the wrong problem
+to be solving. Chapter~\ref{ch:why} tells that story.
+
+\section{Scaffolding}
+
+The first commit, on 26~December 2025, was a bootstrap compiler for AArch64
+written in Rust that emitted LLVM code. The founding notes already set the tone:
+no C interoperability, no loops, recursion only, and a syntax meant to be
+robust for language models to generate. Within a day the LLVM intermediate
+files were gone from the repository; within six days, so were generics.
+
+LLVM was a scaffold from the start. The plan was always for the real compiler
+to emit machine code itself, so that it could reason about the facts of the
+chip it was targeting (Chapter~\ref{ch:machines}).
+
+% TODO-INTERVIEW: Why Rust for the bootstrap, given later views on Rust?
+
+\section{A language writing itself}
+
+On 17~January 2026 work began on the second compiler, written in Silica and
+built by the Rust one. On 16~February it produced its first working program:
+a trivial program that returned the number 42, compiled straight to machine instructions with no LLVM in the
+path. The test suite, called the \emph{trials}, started three days later. It
+would become the project's arbiter of truth (Chapter~\ref{ch:refuses}).
+
+Spring brought the language's core: regions in March, sequence blocks for
+effects, actors in April, then modules, traits and supervisors. In mid-April the
+project went public with a README, a licence and a motto. An AI policy followed
+at the end of the month. In May came the foreign function interface, Fifi,
+reversing the founding refusal of C interop---but wrapped in so much visible
+danger that the reversal became one of the language's principles
+(Chapter~\ref{ch:danger}).
+
+On 29~June the entire first data-structure library was deleted as too
+complicated for its purpose, and a smaller, trait-based design replaced it.
+
+\section{Standing on its own}
+
+Through July 2026 the compiler was converted to build itself, a process
+punctuated by machines running out of memory. At the end of July the first
+fully self-hosted compiler binary compiled itself. On 12~September the compiler
+reached a \emph{fixed point}: rebuilt by itself, it produced itself byte for
+byte, while passing more than 33,000 trials. Five days later the same was true
+on a Raspberry Pi, and the Rust bootstrap was deleted.
+
+% TODO-INTERVIEW: Take me to the day of the first fixed point.
+
+\section{Going everywhere}
+
+Linux on x86-64 reached its own fixed point within days. The same week, work
+began on a bare-metal port to the ESP32-S3 microcontroller, without the vendor's
+SDK or operating system. In October, more than twenty-two thousand trials were
+rewritten into supervisor-and-actor form; a thousand actors ran on a board with
+512~kilobytes of memory; and on hosted systems, actors moved off one operating
+system thread each onto shared carrier threads. On 19~October a single machine
+held a million idle actors in 630 megabytes.
+
+\section{The reckoning}
+
+In late October, designing a revision of the standard data structures, the
+project found that the runtime had been using a per-actor heap that no one had
+ever decided on---a leftover of the first actor runtime---while the documentation
+promised memory on actor stacks. Some forty design decisions were made in three
+days. Everything moved onto actor stacks, with release proven by the compiler
+rather than guessed at runtime (Chapter~\ref{ch:memory}). The new model was
+built across all hosted targets by 4~November.
+
+% TODO-VERIFY: Chunk 15 origin quotes are agent-recorded (.claude-memory);
+%   confirm the account with the author before using any wording.
+
+\section{Reaching out}
+
+In the first two weeks of November, transport became part of the language
+(Chapter~\ref{ch:transport}). Silica nodes spoke Erlang's wire format; boards
+talked over serial lines; a Mac and a Linux machine talked over Ethernet with
+mutual TLS. New targets appeared: an STM32 Nucleo board and a Raspberry Pi Pico
+2~W. Alongside Silica, Project BEES---begun in April 2026 to let Erlang, Elixir,
+Gleam and LFE be compiled to Silica---was pushing the language toward the
+distribution story SwErl had started years before.
+
+\section{How the work was done}
+
+Three features of the process run through the whole record. The trials were the
+gate: a change was not finished until every platform it could affect passed,
+and reference assembly was never regenerated automatically. Barney made the
+design decisions, many of them logged by date in the project's documents. And
+from March 2026 onward, much of the implementation was done with AI coding
+agents, assigned by task, working under rules written for them, one build at a
+time because of memory. Barney thinks of them as an army of developers working
+under direction, not as a way to improvise code, and trust in them grew as the
+models improved and as more Silica existed for them to learn from. After the
+October 2026 discovery that the army had built something no one had decided on,
+the reviews multiplied: automated where possible, and repeated against the
+design documents (Chapter~\ref{ch:hidden}).
+% TODO-INTERVIEW: The quiet summer (June–August 2026): what was happening?
