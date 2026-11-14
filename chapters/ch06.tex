@@ -34,7 +34,14 @@ learned the hard way, building SwErl, that supervision is nearly impossible
 without control over how a failing actor reports its failure
 (Chapter~\ref{ch:actors}).
 
-% TODO-INTERVIEW: Where did the elephant-mother image come from?
+The image is older than Silica. Barney has always had more interests than time
+to pursue them, and decades ago one of them led to a documentary about African
+elephants: intelligent, long-lived animals that plainly care for their families
+and help their young when they get into trouble. The scene of a calf falling and
+being helped up stayed. Years later, looking for a way to explain supervisors to
+someone meeting them for the first time, Barney found the elephant family
+already waiting.\footnote{Interview, 2026-11-14. The documentary's title and
+year are not remembered.}
 
 \section{Guard only what can be ruined}
 
@@ -56,6 +63,52 @@ reported, and there is no way to switch the report off. Silica regards a
 failure that leaves no trace as a fault in the language's own runtime. Failures
 a program expects are handled as ordinary results; failures it does not expect
 stop the part concerned and are announced.
+
+The reason is plain. These are errors, not warnings, and bad code is bad code
+whether or not anyone wants to hear about it. The usual argument for silencing
+failures is noise: too many reports for a person to read. That argument is
+weakening. More and more, the reader of a failure report is an AI model, and
+models do not tire of large volumes of data.\footnote{``They don't mind big data
+sets.'' Interview, 2026-11-14.}
+
+\section{The loop that heals}
+
+A system that reports every failure, completely, makes a different way of
+maintaining software possible. A failure is reported; an AI model evaluates the
+report, flags what matters and proposes a fix; a person reviews the proposal; a
+model writes the fix; a person reviews it again; and only then does it reach the
+running system (Figure~\ref{fig:repair-loop}). Each human review can end the
+loop. Nothing in it depends on someone happening to notice a problem, because
+nothing was hidden.
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/repair-loop}
+  \caption{The repair loop. Machine steps are pale; the two human reviews are
+    solid, and either can stop a fix from going further.}
+  \label{fig:repair-loop}
+\end{figure}
+
+\section{The master's studio}
+\label{sec:studio}
+
+Many people building with AI are trying to remove exactly those two human steps.
+Barney keeps them, for a reason that goes beyond caution. People are the reason
+code is written at all. Code has always been a form of communication between the
+person who writes it and the person who uses it, like a conversation carried by
+a different medium. When AI models do the writing, what is being communicated is
+the intention of whoever directs them.
+
+Barney's analogy is the studio of a Dutch master. The great painters did not
+paint everything that bore their names. Their studios were full of artists,
+working for them and trained by them, who did most of the brushwork. The master
+decided how the work was to be done and what it was to say to the person looking
+at it. Software, in Barney's view, is and always will be creative work of the
+same kind, and without intention there is no creation. The models are the
+studio. The person at each review is the master, deciding whether the work says
+what was meant.\footnote{``Without intention there can be no creation.''
+Interview, 2026-11-14.} The same conviction sits behind the insistence that a
+human writes, and answers for, a program's proof (Chapter~\ref{ch:memory}).
 
 \section{Whoever sets a limit owns it}
 
@@ -97,7 +150,15 @@ two-part motto above, and it later gained the words at compile time. The change
 gave the running program, not only the compiler, a part in keeping its
 promises.
 
-% TODO-INTERVIEW: What changed in your thinking between the two mottos?
+What changed was a recognition of limits. The ways to write bad code are
+endless, and some of them cannot be caught before a program runs. A division
+whose divisor is only known at run time might divide by zero, and short of
+simulating the program's execution, no compiler can promise to find every such
+case. The goal did not change: all bad code should be caught as early as
+possible. But the compiler would be the first defence, not the only one. The
+running program, failing gently and never silently, would catch what the
+compiler could not.\footnote{Barney calls it ``a boots-and-braces situation''.
+Interview, 2026-11-14.}
 
 \section{What it costs}
 
@@ -109,9 +170,16 @@ comfortable not to know about.
 \section{What it opens up}
 
 \begin{itemize}
+  \item \textbf{The systems people live by.} The embedded systems that keep
+        lives going and help lift people out of poverty---electricity, water,
+        farming, cars and the rest of transportation---are where Barney most
+        wants this resilience, and where today it is most often missing.
   \item \textbf{Systems that keep running.} Devices in the field, services
         that cannot go down, and machines no one can reach to restart can heal
         themselves part by part.
+  \item \textbf{Maintenance at the speed of failure.} When every failure is
+        reported in full, AI models can read the reports and propose fixes as
+        fast as problems appear, while people keep the final say.
   \item \textbf{Simpler code.} Without layers of defensive checks, the code
         that remains says what the program is for.
   \item \textbf{Failures that teach.} Because every failure is reported, a
@@ -123,5 +191,13 @@ comfortable not to know about.
         application.
 \end{itemize}
 
-% TODO-INTERVIEW: Where would you most like to see this kind of resilience
-%   that it doesn't exist today?
+\section{Helping each other up}
+
+Asked where this kind of resilience is most needed, Barney's first answer was
+not about technology at all. People have always struggled with how to respond to
+failure. Some become so concerned with not being taken advantage of that, when
+someone fails, they fall into assuming there must be something wrong with that
+person. Barney has seen it in business, in education and beyond. The supervisor
+offers another way: expect that things will fall, keep the damage small, help
+the one who fell back up, and be honest about what happened. It is the elephant
+mother's way, and it is not only for machines.\footnote{Interview, 2026-11-14.}

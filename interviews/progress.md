@@ -11,7 +11,7 @@ Running log kept by the `ghostwriter` skill.
 | 3 | Honesty — Hide Nothing | 1 | woven 2026-11-13 (new section: Honest about the tools) |
 | 4 | Transparency — Say What You Do | 1 | woven 2026-11-13 |
 | 5 | Independence — Share Nothing | 1 | woven 2026-11-13 (new section: The end of one size fits all) |
-| 6 | Resilience — Fail Gently, Never Silently | 0 | draft (ideas + opportunities) |
+| 6 | Resilience — Fail Gently, Never Silently | 1 | woven 2026-11-14 (new sections: The loop that heals, with figure; The master's studio; Helping each other up) |
 | 7 | Predictability — Leave Nothing to Chance | 1 | woven 2026-11-13 (new sections: The heap and the file; Proof before code) |
 | 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
 | 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
@@ -286,3 +286,45 @@ To verify:
 Woven (author approved): ch10 (reasons for refusal and the clean-up ethic; gap
 is the compiler catching up; refusals as a check on LLM output; the fixed-point
 days and removal of Rust; new first opportunity). In-place updating left out.
+
+### 2026-11-14 (second) — Chapter 6 (Resilience)
+Transcript: `sessions/2026-11-14-ch06-resilience.md`. 8 questions.
+
+Learned:
+- **Why the motto changed (April 2026):** the set of possible bad code is
+  infinite; not all of it can be caught at compile time (e.g. division by a
+  variable divisor) short of simulated execution. Still, catch all bad code as
+  early as possible. "Boots-and-braces": compiler first, runtime second.
+- **Never silent:** these are errors, not warnings; bad code is bad code. AIs
+  now read the error output, and they don't mind big data sets — noise is no
+  longer a reason to silence failures.
+- **The repair loop:** failure → report → AI evaluation and flagging →
+  proposed fix → human assessment → AI-produced fix → human assessment →
+  production, with "don't do it" branches at each human step.
+- **Why humans stay in (the studio of the Dutch masters):** humans are why code
+  is written; code is communication between producer and user, and with AI it
+  is the producer's intentions being transmitted. The masters directed;
+  studio artists did most of the work. Software is and always will be creative
+  work; without intention there is no creation. (Candidate also for ch01/ch03.)
+- **The elephant mother:** from a documentary on African elephants watched
+  decades ago (title and year not remembered) — intelligent, long-lived, caring
+  for family, helping their young up when they fall. Came to mind when pondering
+  how to explain supervisors. Barney has always had more interests than time.
+- **Where resilience is most needed:** first among people — the trap of
+  "there must be something wrong with them" thinking when failure happens, seen
+  in and outside business and education. In technology: embedded systems that
+  keep lives going and lift people out of poverty — electricity, water,
+  farming, cars and transportation.
+
+New open threads:
+- The guarded dangerous actor as the unit of failure for foreign code (ch06
+  TODO, not asked).
+- Where else the studio/intention idea belongs (ch01? ch03? ch10?).
+
+To verify:
+- Nothing new from sources.
+
+Woven (author approved): ch06 (motto change and boots-and-braces; never silent
+and AI readers; The loop that heals + figures/repair-loop.tex; The master's
+studio; elephant documentary; embedded systems and maintenance opportunities;
+Helping each other up), ch01 (pointer to the studio section).
