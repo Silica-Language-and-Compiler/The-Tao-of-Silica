@@ -7,16 +7,16 @@ Running log kept by the `ghostwriter` skill.
 | Ch | Title | Sessions | Status |
 |---|---|---|---|
 | 1 | Why? and Why Not? | 1 | woven 2026-11-13 (new sections: The wrong problem; A recovery, and a new kind of reader) |
-| 2 | How We Got Here | 0 | draft (ideas + opportunities) |
+| 2 | How We Got Here | 1 | woven 2026-11-14 |
 | 3 | Honesty — Hide Nothing | 1 | woven 2026-11-13 (new section: Honest about the tools) |
 | 4 | Transparency — Say What You Do | 1 | woven 2026-11-13 |
 | 5 | Independence — Share Nothing | 1 | woven 2026-11-13 (new section: The end of one size fits all) |
 | 6 | Resilience — Fail Gently, Never Silently | 1 | woven 2026-11-14 (new sections: The loop that heals, with figure; The master's studio; Helping each other up) |
 | 7 | Predictability — Leave Nothing to Chance | 1 | woven 2026-11-13 (new sections: The heap and the file; Proof before code) |
-| 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
-| 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
+| 8 | Simplicity — One Way to Do Each Thing | 1 | woven 2026-11-14 |
+| 9 | Accountability — Make Danger Visible | 1 | woven 2026-11-14 (new section: For everyone who answers for software) |
 | 10 | Rigor — Refuse the Almost Right | 1 | woven 2026-11-14 |
-| 11 | Fidelity — Respect the Machine | 0 | draft (ideas + opportunities) |
+| 11 | Fidelity — Respect the Machine | 1 | woven 2026-11-14 (new figure: hourglass vs channel) |
 | 12 | Connection — Speak Across Every Boundary | 1 | woven 2026-11-14 (new section: Fork the language) |
 
 ## Open threads
@@ -374,3 +374,155 @@ Woven (author approved): ch12 (the BEES/language debate; C sockets today and the
 planned Silica stack; Fork the language + disposable software; BEES history,
 Silica wins, transport vs management; truly distributed systems; Organism as
 one example), ch09 (SEMP behaviour ideas go forward in BEES).
+
+### 2026-11-14 (fourth) — Chapter 11 (Fidelity)
+Transcript: `sessions/2026-11-14-ch11-fidelity.md`. 6 questions.
+
+Learned:
+- **Portability is not needed** when specific solutions are easy to produce (ties
+  to forking and disposability). ARM first only because Barney's work and home
+  machines are ARM; bought a used x86-64 machine for that port; dug out an old
+  Raspberry Pi. The compiler's design means a new platform needs only a new
+  emitter. Using a chip behaviour on a device without it → emitter error, build
+  stops. Developers with LLMs can do the same for their applications, so compiled
+  code is device-specific — not bloat, but "laser focused" on the hardware, not
+  a lowest bar that reaches all hardware.
+- **Why LLVM went:** LLVM uses the PDP-11 model; modern chip behaviours can't be
+  exposed efficiently through it. Silly to put a broad, expressive language
+  through a PDP-11 bottleneck and hope optimizers expand it back out.
+- **The whiteboard images:** an hourglass (language / PDP-11 neck / optimizers /
+  chip) beside Silica's path — two vertical lines with Silica at the top and the
+  hardware at the bottom. Energizes people when compared. Author proposes the
+  diagram for the book.
+- **The harder path on boards:** the principle of exposing the hardware through
+  the language; the PDP-11 legacy is alive in embedded libraries and tools.
+  "Quicker is easier. But better is better." LLMs make doing better at scale far
+  more feasible.
+- **Who should build on boards:** everybody and anybody with a need. Problem
+  solving principles are the same everywhere and always; with LLMs used as
+  Barney has, that's all you need. Nobody and no software is perfect; failures
+  happen; adjust and move on.
+- **Measure first:** from working in the simulation industry, where even a 1%
+  slowdown was wildly unacceptable; plus a lifelong predilection for correctness
+  and beauty.
+
+New open threads:
+- The simulation industry years: which company/kind of simulation, when.
+- A specific board and behaviour someone could finally express (ch11 TODO, not
+  asked).
+
+To verify:
+- x86-64 and Raspberry Pi ports in the history (dates) — Linux x86-64 first fixed
+  point 2026-09-19 per ROADMAP.
+
+Woven (author approved): ch11 (ARM first and portability; LLVM as PDP-11
+bottleneck + figures/hourglass.tex; the harder path on boards; simulation
+industry and measure first; anyone with a need can build). Author approved
+mentioning the simulation industry.
+
+### 2026-11-14 (fifth) — Chapter 9 (Accountability)
+Transcript: `sessions/2026-11-14-ch09-accountability.md`. 6 questions.
+
+Learned:
+- **No inbound calls — separation of roles.** To embed a Silica app in another
+  system, communicate with it through transport. Calling in directly would
+  bypass data checking and undermine Silica's security promises.
+- **`dangerous_` spreading:** no complaints yet, though some are expected; no
+  change anticipated, because the mark makes security audits easier. No
+  certified-safe wrapper to stop the spread.
+- **Audience:** all of them — engineers, managers, auditors, policymakers; it
+  affects all their work. Takeaway: the old ways don't have to be followed; we
+  have new tools, use them for what they're good at. "Tradition can be both good
+  and stifling. Don't let the good get stifled."
+- **Trusting users:** tech people talk about trust with users but rarely trust
+  them — "trust us, we know what is best for you". New tools should let users
+  express agency; tools must let them see what is happening and how trustworthy
+  it is. Old systems may not want that visibility.
+- **How users would see it:** through an AI they have come to trust, highlighting
+  potential dangers.
+- Organism: very early conceptualization; expect dramatic changes in design and
+  development, but it will keep its vision.
+
+New open threads:
+- Fifi's poodle name origin (not asked).
+- Capabilities and brokered isolation: plan and timing (not asked directly).
+
+To verify:
+- Nothing new.
+
+Woven (author approved): ch09 (no inbound calls as separation of roles; the
+spreading mark stays; trusting users and AI-highlighted danger; Organism early
+stage; users who can see and choose; For everyone who answers for software).
+
+### 2026-11-14 (sixth) — Chapter 8 (Simplicity)
+Transcript: `sessions/2026-11-14-ch08-simplicity.md`. 6 questions.
+
+Learned:
+- **Simple has always been better, since childhood:** complicated things are
+  more likely to hide problems.
+- **Boundaries from the simulation industry:** with customers, one of the biggest
+  things to lay out was what the software would *not* do — keeping scope creep
+  down and the spec comprehensible, a document both provider and user could
+  understand and rely on; a reported bug could be checked against it (bug, or
+  chosen behaviour?). Working within bounds is liberating.
+- **Music:** bass clarinet in junior high; fiddle lessons as an adult. Getting
+  lost in the sound when you get it right is freeing. Creative acts always
+  require boundaries; languages are powerful because they give limits you can
+  use creatively.
+- **Collections vs generics:** generics hide data shapes; Silica's data
+  structures elevate them so they aren't lost and there's no question what's
+  used. Different purposes.
+- **Aliases rejected:** tempted to add aliases for human readability; a trusted
+  sounding board (unnamed; by role) advised against — it would reduce the
+  language's "amazingness" and "beauty". Held firm: easier for humans, harder for
+  LLMs to generate correct code.
+- **Ten years out:** like any art form, like the Dutch masters — the person
+  grounded in reality who knows what they want does the judging and the
+  conceptualization; AIs do the typing; humans ensure the result is what they
+  wanted.
+
+New open threads:
+- Two decisions now shaped by trusted sounding boards (do...end, aliases):
+  same person? Named with permission?
+
+To verify:
+- Nothing new.
+
+Woven (author approved): ch08 (temperament: childhood, simulation-industry
+boundaries, music; collections vs generics; aliases rejected; ten-year view as
+the Dutch masters' studio).
+
+### 2026-11-14 (seventh) — Chapter 2 (How We Got Here)
+Transcript: `sessions/2026-11-14-ch02-history.md`. 7 questions.
+
+Learned:
+- **Why Rust for the bootstrap:** Barney had been working heavily in Rust and had
+  the tooling installed; all that was needed was a minimal compiler able to build
+  a compiler that could build itself. The bootstrap didn't need to express all of
+  Silica's design.
+- **Faster than the 6–9 month plan, nothing skipped:** rapid progress came from
+  Silica's design, a flexible development approach, and knowledgeable use of LLMs.
+- **The approach:** build it; measure it; replace it with better — radically
+  different from industry's "if it ain't broke, don't fix it". LLMs typed;
+  Barney thought and evaluated.
+- **Deleting the first data-structure library (29 June 2026):** too much memory,
+  too slow, didn't capture the hopes for its use. Sad to toss, good to start over
+  having learned what not to do; could happen again.
+- **Self-hosting summer:** a little frustrating, but each small change brought
+  visible results — on the right track.
+- **Trial pairs:** finding bugs is always part of the plan; all code is and will
+  always be flawed, which is no reflection on the worth of its producer. Purpose:
+  train models, and find unhandled edge cases.
+- **October reckoning:** "forty decisions in three days" confirmed ("sounds about
+  right"); remembered as exciting.
+
+New open threads:
+- None new.
+
+To verify:
+- The miscompilation example (`20 + (x + 1)` → 41) in the 2026-09-09 addendum;
+  as noted it is ambiguous. Don't use without checking.
+
+Woven (author approved): ch02 (Rust bootstrap; pace with nothing skipped;
+data-structure deletion; summer and fixed point; reckoning confirmed and
+exciting; build-measure-replace; training trials and flawed code).

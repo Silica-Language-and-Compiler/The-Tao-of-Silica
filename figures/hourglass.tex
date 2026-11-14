@@ -1,0 +1,33 @@
+% The hourglass and the channel (Chapter 11), after the author's whiteboard
+% drawing. Left: an expressive language squeezed through a PDP-11 model, then
+% widened again by optimizers. Right: Silica straight down to the hardware.
+\begin{tikzpicture}[
+    lbl/.style={font=\small, text=taoink},
+    note/.style={font=\footnotesize\itshape, text=taoink!75, align=left},
+    pathlabel/.style={font=\small\scshape, text=taoink!85},
+    arrow/.style={-{Stealth[length=2mm]}, taoink!60, thick},
+  ]
+  % ---- Left: the hourglass ----
+  \begin{scope}
+    \fill[taopaper] (-18mm,50mm) -- (18mm,50mm) -- (2.5mm,25mm)
+                    -- (18mm,0mm) -- (-18mm,0mm) -- (-2.5mm,25mm) -- cycle;
+    \draw[taoink!60, thick] (-18mm,50mm) -- (18mm,50mm) -- (2.5mm,25mm)
+                    -- (18mm,0mm) -- (-18mm,0mm) -- (-2.5mm,25mm) -- cycle;
+    \node[lbl] at (0,45mm) {Language};
+    \node[note, anchor=west] at (7mm,25mm) {PDP-11\\model};
+    \node[note] at (0,11mm) {optimizers};
+    \node[lbl] at (0,4mm) {Chip};
+    \draw[arrow] (0,40.5mm) -- (0,15mm);
+    \node[pathlabel] at (0,-6mm) {Conventional};
+  \end{scope}
+  % ---- Right: the channel ----
+  \begin{scope}[xshift=52mm]
+    \fill[taopaper] (-13mm,0mm) rectangle (13mm,50mm);
+    \draw[taoaccent, very thick] (-13mm,0mm) -- (-13mm,50mm);
+    \draw[taoaccent, very thick] (13mm,0mm) -- (13mm,50mm);
+    \node[lbl] at (0,45mm) {Silica};
+    \node[lbl] at (0,4mm) {Hardware};
+    \draw[arrow] (0,40.5mm) -- (0,8.5mm);
+    \node[pathlabel] at (0,-6mm) {Silica};
+  \end{scope}
+\end{tikzpicture}

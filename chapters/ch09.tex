@@ -45,10 +45,18 @@ uses foreign code must say so in its very name, with the prefix
 \code{dangerous_}, and so must every part that uses \emph{that}, all the way up to
 the program as a whole. Danger cannot be wrapped, inherited quietly or buried in
 a dependency. Putting the marker in names, rather than among the other effects a
-piece of code declares, keeps it pure signal that can never be lost in noise. Foreign code runs only in separate workers set aside for it, data
-it returns is treated with suspicion, and other languages cannot call into
-Silica at all. If the foreign code crashes, only its worker fails, and its
-supervisor restarts it (Chapter~\ref{ch:failsoft}).
+piece of code declares, keeps it pure signal that can never be lost in noise. Foreign code runs only in
+separate workers set aside for it, data it returns is treated with suspicion,
+and other languages cannot call into Silica at all. If the foreign code crashes,
+only its worker fails, and its supervisor restarts it
+(Chapter~\ref{ch:failsoft}).
+
+The ban on calls coming in is not a temporary gap. Barney sees it as a
+separation of roles. A system that wants a Silica program inside it should talk
+to that program the way any peer does, through transport, where everything that
+arrives is checked (Chapter~\ref{ch:transport}). A direct call from outside
+would arrive with no checking at all, and Silica's security promises would
+weaken with it.\footnote{Interview, 2026-11-14.}
 
 Fifi does not claim to make foreign code safe. Its design says plainly that it
 is not a sandbox. What it promises is that the boundary cannot be hidden.
@@ -92,6 +100,19 @@ the parts it has been given are able to do, and that authority should be
 visible in the design. Much of this is planned rather than built, and the
 documents say so.
 
+Barney takes visible authority further than programmers and auditors, to the
+people who use what they build. The technology industry talks a great deal about
+users trusting it, but in Barney's experience it seldom trusts them. Too often
+the arrangement amounts to: trust us, we know what is best for you. With the new
+tools, Barney argues, that should change. Users should be allowed more agency,
+and that means tools that let them see what is happening and how trustworthy it
+is---a degree of visibility older systems may not welcome. The way Barney sees it
+reaching ordinary people is through an AI they have come to trust, pointing out
+possible dangers on their behalf. Organism (Chapter~\ref{ch:transport}), which
+makes visible authority its whole security model, is the fullest sketch of this
+so far. It is at a very early stage, and Barney expects it to change
+dramatically once real design begins, while keeping its vision.
+
 % TODO-VERIFY: Keep status current: capabilities, brokered isolation, TLS and
 %   the crypto proposal were design-only as of 2026-11-13.
 
@@ -101,6 +122,11 @@ Visibility is uncomfortable. Using one foreign library renames everything
 above it, and that is the point: the inconvenience is the signal. Some things
 that are easy in other languages, such as letting outside code call in, are
 simply not offered.
+
+No one has complained about the spreading mark yet, though Barney expects some
+will. No change is planned, and no carefully audited wrapper will be allowed to
+stop the spread. The mark is what makes a security audit straightforward, and a
+mark that could be stopped would stop being useful.
 
 \section{What it opens up}
 
@@ -117,7 +143,21 @@ simply not offered.
   \item \textbf{An answer to the regulators' question.} Governments now ask
         software makers to be secure by design. A language that makes danger
         visible gives them evidence rather than assurances.
+  \item \textbf{Users who can see, and choose.} When danger is marked all the
+        way up, an AI that a person trusts can point it out to them, and the
+        choice of what to accept becomes theirs.
 \end{itemize}
 
-% TODO-INTERVIEW: Who do you most want to read this chapter — engineers,
-%   managers, or the people writing security policy?
+\section{For everyone who answers for software}
+
+This chapter is meant for all of the people whose work it touches: the engineers
+deciding whether to bring in a C library, the managers responsible for what
+ships, the auditors asked to vouch for it, and the people who write the policies
+that govern it. The lesson Barney hopes they take from it is the same for each.
+The old ways of doing things do not have to be followed. There are new tools,
+and they should be used for what they do well. Tradition can preserve what is
+good, and it can also smother it; the task is to keep the first from being lost
+to the second.\footnote{``Tradition can be both good and stifling. Don't let the
+good get stifled.'' Interview, 2026-11-14.}
+
+% TODO-INTERVIEW: Where did the Fifi poodle name come from?
