@@ -15,7 +15,7 @@ Running log kept by the `ghostwriter` skill.
 | 7 | Predictability — Leave Nothing to Chance | 1 | woven 2026-11-13 (new sections: The heap and the file; Proof before code) |
 | 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
 | 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
-| 10 | Rigor — Refuse the Almost Right | 0 | draft (ideas + opportunities) |
+| 10 | Rigor — Refuse the Almost Right | 1 | woven 2026-11-14 |
 | 11 | Fidelity — Respect the Machine | 0 | draft (ideas + opportunities) |
 | 12 | Connection — Speak Across Every Boundary | 0 | draft (ideas + opportunities) |
 
@@ -33,6 +33,10 @@ Running log kept by the `ghostwriter` skill.
 
 - 2026-11-13: A crash in foreign C code ends only the dangerous actor, which is
   restarted by its supervisor; ch06 and ch09 corrected.
+
+- 2026-11-14: Ch10 "Refuse, don't repair" described an unimplemented design as
+  current. Rewritten as design intent; only the unused-value check (E1055)
+  exists. Costs section adjusted.
 
 ## Sessions
 
@@ -248,3 +252,37 @@ New open threads:
 Woven (author approved): ch04 (do...end history, coarse sieve, verified
 238/254, signal vs noise, memory safety and deliberate pain, friction vs
 busywork, opportunities), ch09 (dangerous_ as pure signal).
+
+### 2026-11-14 — Chapter 10 (Rigor)
+Transcript: `sessions/2026-11-14-ch10-rigor.md`. 8 questions.
+
+Learned:
+- **The gap is not deliberate:** the refusal rules are published ahead of the
+  build simply because the compiler hasn't caught up yet.
+- **Why refuse rather than ignore:** unused code adds complexity and another
+  attack surface for bad actors. Clean up after yourself at work, at home, when
+  visiting, and when changing code. Every line written could hold a bug; get
+  rid of what isn't needed. Reasoning and extrapolation, **not drawn from a
+  specific incident** (author has no example); present it as an argument.
+- **Refusal as a check on LLM output:** the errors verify what the models did
+  and say exactly what to remove, so an LLM can readily remove it.
+- **The fixed point (12 Sept 2026):** Barney watched the compile; it took a few
+  attempts over a few days to remove the Rust build's runtime leftovers.
+  Afterwards all Rust dependencies were removed; Clang became the linker and
+  assembler. Reason: unused tools should be removed from devices for the same
+  reasons as unused code.
+- **Opportunity:** LLM-generated code that is more succinct, more likely to be
+  correct and more likely to be safer, at scale.
+- **Hot code upgrade under whole-program compilation:** actively being thought
+  about; Barney believes a solution exists but is not ready to discuss it.
+
+New open threads:
+- Hot code upgrade: revisit when the author is ready. Author: leave it out of
+  the book for now (2026-11-14).
+
+To verify:
+- Date Rust dependencies were removed and Clang adopted (design docs / git log).
+
+Woven (author approved): ch10 (reasons for refusal and the clean-up ethic; gap
+is the compiler catching up; refusals as a check on LLM output; the fixed-point
+days and removal of Rust; new first opportunity). In-place updating left out.

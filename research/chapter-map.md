@@ -135,7 +135,9 @@ The meta-principle: intellectual honesty.
 - Capabilities (designed, not built) (SUB 1.2).
 
 ### Chapter 10. Rigor — *Refuse the Almost Right*
-- Reject "almost right" code; no escape hatches (CORE §1.10).
+- Reject "almost right" code; no escape hatches (CORE §1.10). **Design only
+  except unused values (E1055); author flagged 2026-11-14 that the chapter must
+  present it as not yet implemented.**
 - The compiler writes the dangerous parts (SUB Part 2 #6).
 - One compilation unit; libraries are source (CORE §1.13).
 - Proof through types (CORE §1.14).
