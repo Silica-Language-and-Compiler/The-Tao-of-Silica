@@ -36,8 +36,23 @@ audited by the hardware there. Being able to say what the chip actually
 guarantees, in the language rather than in comments and conventions, is what
 resonates most.\footnote{Interview, 2026-11-13.}
 
-% TODO-INTERVIEW: Is "modern chips" really "ARM first"? How do you weigh
-%   fidelity to one family of chips against portability?
+Silica's first home was ARM, but not as a matter of doctrine. ARM chips were
+simply what Barney had at work and at home. When the time came for other chips,
+a used x86-64 machine was bought and an old Raspberry Pi dug out of storage.
+The compiler had been designed so that a new kind of chip needs only a new final
+stage, the part that turns a program into that chip's instructions. Ask for a
+feature on a chip that lacks it, and the build stops with an error rather than
+quietly imitating the feature.
+
+That is fidelity's answer to portability. Portability, the long habit of writing
+for the lowest common ground so that a program runs everywhere, matters far less
+when specific solutions are easy to produce (Chapter~\ref{ch:transport}). With
+AI models to help, developers can do for their own applications what Silica does
+for itself, and build each one for the device it runs on. Barney does not regard
+the result as bloat. Code built this way is focused on the hardware beneath it
+and uses all of it, instead of settling for a bar low enough to reach every
+machine.\footnote{Interview, 2026-11-14.}
+
 % TODO-INTERVIEW: A specific board and behaviour someone could finally express
 %   in Silica, and their reaction.
 
@@ -46,9 +61,26 @@ resonates most.\footnote{Interview, 2026-11-13.}
 Most new languages hand their final step---turning a program into machine
 instructions---to a shared toolkit, usually LLVM. Silica used LLVM only to get
 started, and dropped it as soon as the compiler written in Silica could produce
-machine instructions itself. The reason was not speed of compilation. It was
-that a compiler which owns the last step can reason about the real properties
-of the chip, rather than about a toolkit's generalised picture of one.
+machine instructions itself. The reason was not speed of compilation. LLVM, like
+the languages it serves, thinks in the PDP-11's terms, and the behaviours of
+modern chips cannot be expressed efficiently or well through that picture. To
+Barney it made no sense to take a broad, expressive language, squeeze it through
+a PDP-11-shaped bottleneck, and then hope that optimizers would widen the
+running code back out into what the language had said in the first place.
+
+Barney has drawn the comparison on whiteboards many times, and it makes sense to
+those who see it (Figure~\ref{fig:hourglass}). The conventional path is an
+hourglass. Silica's is a straight channel from the language to the hardware,
+with nothing narrower in between.
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/hourglass}
+  \caption{Two paths from language to chip, after Barney's whiteboard drawing.
+    The conventional path narrows to a PDP-11 model and relies on optimizers to
+    widen it again; Silica's runs straight down to the hardware.}
+  \label{fig:hourglass}
+\end{figure}
 
 \section{Bare metal first}
 
@@ -61,7 +93,12 @@ software or operating system underneath, and testing on real boards rather
 than simulations. A thousand actors now run on a board with half a megabyte of
 memory. More boards followed.
 
-% TODO-INTERVIEW: Why choose the harder path each time?
+The easier options were turned down for the same reason LLVM was. The PDP-11's
+legacy is alive and well in the libraries and tools used to build software for
+embedded systems, and taking them would have meant taking the bottleneck with
+them. Quicker would have been easier, but better is better, and AI models have
+made doing better far more feasible at scale.\footnote{``Quicker is easier. But
+better is better.'' Interview, 2026-11-14.}
 
 \section{Honest where control is shared}
 
@@ -79,6 +116,11 @@ before proposing a change, and give numbers only where they have been checked.
 Several designs in the project's history were withdrawn the moment the
 measurements came in.
 
+The habit is older than Silica. Barney once worked in the simulation industry,
+on software that had to run very fast, where even a one per cent loss of speed
+was wildly unacceptable. That training joined a predilection Barney has had
+since youth, for correctness and for beauty.
+
 \section{What it costs}
 
 Faithfulness to real hardware means more work for every new kind of machine,
@@ -88,6 +130,12 @@ means being honest that a laptop cannot offer everything a bare board can.
 \section{What it opens up}
 
 \begin{itemize}
+  \item \textbf{Anyone with a need can build.} Asked who should build on
+        these boards, Barney's answer is everybody and anybody. The principles
+        of solving problems are the same everywhere and in every age, and with
+        AI models used well they are enough to build what makes one's own life,
+        or others' lives, better. Nothing will be perfect. Failures will happen,
+        and the answer is to adjust and move on (Chapter~\ref{ch:failsoft}).
   \item \textbf{One language from the badge to the data centre.} The same
         ideas, and the same programs, can run on a microcontroller and on a
         server.
@@ -102,5 +150,5 @@ means being honest that a laptop cannot offer everything a bare board can.
         professionals use.
 \end{itemize}
 
-% TODO-INTERVIEW: What would you most like to see built on small boards
-%   with Silica?
+% TODO-INTERVIEW: The simulation industry years: what kind of simulation, and
+%   what did it teach beyond measurement?

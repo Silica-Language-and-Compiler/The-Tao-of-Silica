@@ -16,7 +16,7 @@ Running log kept by the `ghostwriter` skill.
 | 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
 | 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
 | 10 | Rigor — Refuse the Almost Right | 1 | woven 2026-11-14 |
-| 11 | Fidelity — Respect the Machine | 0 | draft (ideas + opportunities) |
+| 11 | Fidelity — Respect the Machine | 1 | woven 2026-11-14 (new figure: hourglass vs channel) |
 | 12 | Connection — Speak Across Every Boundary | 1 | woven 2026-11-14 (new section: Fork the language) |
 
 ## Open threads
@@ -374,3 +374,48 @@ Woven (author approved): ch12 (the BEES/language debate; C sockets today and the
 planned Silica stack; Fork the language + disposable software; BEES history,
 Silica wins, transport vs management; truly distributed systems; Organism as
 one example), ch09 (SEMP behaviour ideas go forward in BEES).
+
+### 2026-11-14 (fourth) — Chapter 11 (Fidelity)
+Transcript: `sessions/2026-11-14-ch11-fidelity.md`. 6 questions.
+
+Learned:
+- **Portability is not needed** when specific solutions are easy to produce (ties
+  to forking and disposability). ARM first only because Barney's work and home
+  machines are ARM; bought a used x86-64 machine for that port; dug out an old
+  Raspberry Pi. The compiler's design means a new platform needs only a new
+  emitter. Using a chip behaviour on a device without it → emitter error, build
+  stops. Developers with LLMs can do the same for their applications, so compiled
+  code is device-specific — not bloat, but "laser focused" on the hardware, not
+  a lowest bar that reaches all hardware.
+- **Why LLVM went:** LLVM uses the PDP-11 model; modern chip behaviours can't be
+  exposed efficiently through it. Silly to put a broad, expressive language
+  through a PDP-11 bottleneck and hope optimizers expand it back out.
+- **The whiteboard images:** an hourglass (language / PDP-11 neck / optimizers /
+  chip) beside Silica's path — two vertical lines with Silica at the top and the
+  hardware at the bottom. Energizes people when compared. Author proposes the
+  diagram for the book.
+- **The harder path on boards:** the principle of exposing the hardware through
+  the language; the PDP-11 legacy is alive in embedded libraries and tools.
+  "Quicker is easier. But better is better." LLMs make doing better at scale far
+  more feasible.
+- **Who should build on boards:** everybody and anybody with a need. Problem
+  solving principles are the same everywhere and always; with LLMs used as
+  Barney has, that's all you need. Nobody and no software is perfect; failures
+  happen; adjust and move on.
+- **Measure first:** from working in the simulation industry, where even a 1%
+  slowdown was wildly unacceptable; plus a lifelong predilection for correctness
+  and beauty.
+
+New open threads:
+- The simulation industry years: which company/kind of simulation, when.
+- A specific board and behaviour someone could finally express (ch11 TODO, not
+  asked).
+
+To verify:
+- x86-64 and Raspberry Pi ports in the history (dates) — Linux x86-64 first fixed
+  point 2026-09-19 per ROADMAP.
+
+Woven (author approved): ch11 (ARM first and portability; LLVM as PDP-11
+bottleneck + figures/hourglass.tex; the harder path on boards; simulation
+industry and measure first; anyone with a need can build). Author approved
+mentioning the simulation industry.
