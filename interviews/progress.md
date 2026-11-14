@@ -17,7 +17,7 @@ Running log kept by the `ghostwriter` skill.
 | 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
 | 10 | Rigor — Refuse the Almost Right | 1 | woven 2026-11-14 |
 | 11 | Fidelity — Respect the Machine | 0 | draft (ideas + opportunities) |
-| 12 | Connection — Speak Across Every Boundary | 0 | draft (ideas + opportunities) |
+| 12 | Connection — Speak Across Every Boundary | 1 | woven 2026-11-14 (new section: Fork the language) |
 
 ## Open threads
 
@@ -328,3 +328,49 @@ Woven (author approved): ch06 (motto change and boots-and-braces; never silent
 and AI readers; The loop that heals + figures/repair-loop.tex; The master's
 studio; elephant documentary; embedded systems and maintenance opportunities;
 Helping each other up), ch01 (pointer to the studio section).
+
+### 2026-11-14 (third) — Chapter 12 (Connection)
+Transcript: `sessions/2026-11-14-ch12-connection.md`. 7 questions.
+
+Learned:
+- **The three positions were a debate about BEES vs the language**, not about
+  whether networking matters. The last decision (transport in the language) is
+  the correct one: modern devices swim in a sea of connectivity; a separate
+  communication library is strange and weird at this point in history.
+- **Current state (author-supplied note):** sockets still go through the FFI
+  (a C sidecar) inside `dangerous_` carrier actors; `carried_on` sits on top and
+  programs talk to the carrier by messages, never calling sockets themselves.
+- **Plan:** an early priority is a TCP/IP stack written in Silica, so the
+  dangerous FFI call can go away. Gains: the language's memory-safety contract
+  ("contat" read as contract) all the way down, and networking can truly become
+  part of the compiler and therefore the language.
+- **Closed set of wire formats:** if transport is language, wire formats must be
+  too, or the language is incomplete and self-contradictory. With LLMs a new
+  format is a codec and some code. Need a different format or data shape? Fork
+  the compiler and add it; if it may help others, open a pull request with
+  reasoning and evidence. No twisting an existing format to fit.
+- **Disposable software:** "a new time… where software is disposable. Build good
+  quality. Don't plan on longevity." Not necessarily the whole program — parts.
+  Replace whatever doesn't fit or makes other things harder; don't fall for the
+  sunk-cost fallacy. Silica's own history bears this out.
+- **BEES:** confirmed "Silica wins" ruling. BEES predates Silica conceptually and
+  is one reason Silica exists (no language could do it well). As Silica grew,
+  BEES plans that no longer made sense there were dropped. **Division of
+  responsibilities: Silica does transport; BEES manages transport** — SEMP's
+  churn and behaviour ideas go forward in BEES.
+- **Opportunity:** truly distributed systems spanning mobile, IoT, personal and
+  shared devices — extremely hard today. Organism is one example. User ease and
+  trust could rise sharply. Today we wire fractured, independent systems
+  together to simulate integration.
+
+New open threads:
+- When the Silica TCP/IP stack is built, update ch09/ch12 (FFI no longer needed
+  for networking).
+
+To verify:
+- Nothing new; "Silica wins over BEES" now author-confirmed.
+
+Woven (author approved): ch12 (the BEES/language debate; C sockets today and the
+planned Silica stack; Fork the language + disposable software; BEES history,
+Silica wins, transport vs management; truly distributed systems; Organism as
+one example), ch09 (SEMP behaviour ideas go forward in BEES).

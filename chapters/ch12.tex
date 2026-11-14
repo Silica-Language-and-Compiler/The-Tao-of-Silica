@@ -36,8 +36,13 @@ operating system's connections and ports---is not the language's to own. But
 when it arrives are questions about data and meaning, which is to say questions
 for the language.
 
-% TODO-INTERVIEW: The three changes of position: why not networking, why not
-%   a library, and why is moving data different from plumbing?
+The swings were not about whether networking mattered. They were a debate
+about where a line should fall: what belonged to Project BEES, Barney's effort to
+bring the Erlang family of languages to Silica, and what belonged to the language
+itself. The final answer, Barney is sure, is the right one. Modern devices swim
+in a sea of connectivity. At this point in history, treating communication as a
+library kept apart from the language is strange.\footnote{Interview,
+2026-11-14.}
 
 \section{Trust nothing that arrives}
 
@@ -55,6 +60,40 @@ it since it was written (Chapter~\ref{ch:memory}).
 The simplest connection Silica offers is documented as exactly that: no
 encryption, no identity. Secure exchange is being built on top of it, openly.
 
+There is a second piece of honesty here. Beneath the language's own transport,
+the sockets that reach the network are still the operating system's, written
+in C. Silica reaches them the only way it allows foreign code to be reached: in
+workers whose names carry the \code{dangerous_} mark (Chapter~\ref{ch:danger}).
+Ordinary programs never touch a socket; they exchange messages with those
+workers. An early goal is to remove even that, by writing a network stack in
+Silica itself. Then the language's promise of memory safety would hold all the
+way down to the wire, and networking could become part of the compiler, and so
+of the language, in the fullest sense.
+
+\section{Fork the language}
+
+If moving data is part of the language, then so are the formats data travels
+in. A language that owned transport but left its formats to libraries would be
+incomplete, and would contradict itself. So the set of formats is fixed by the
+language---but fixed is not the same as frozen. With AI models to help, a new
+format is little more than a codec and some code. Barney's advice to anyone who
+needs one is to fork the compiler and add it. If it might help others, they can
+offer it back, with their reasoning and whatever evidence they have gathered.
+Developers with a particular need no longer have to twist an existing format to
+fit; they can make their own, even for a small project.
+
+Behind the advice is a larger view, the same one that ends the search for one
+size to fit all (Chapter~\ref{ch:actors}). Barney believes software has entered
+a new era in which it is disposable: built to good quality, but not built on the
+assumption that it will last.\footnote{``We have entered and are continuing to
+go through a new time; one where software is disposable.'' Interview,
+2026-11-14.} Disposable need not mean a whole program. More often it means a
+part: whatever no longer fits, or makes other things harder, is replaced with
+something better, however much was spent building it. Silica's own history is
+the evidence. Networking went in, came out and came back; a memory design was
+replaced several times in a fortnight; ideas were dropped hours after they were
+written down. Refusing to be held by the sunk cost is how the language was made.
+
 \section{Speaking an old friend's language}
 
 The first way Silica packages data is Erlang's own. Silica machines can
@@ -65,8 +104,14 @@ is modest and telling: make it possible, not easy, and ask Silica to change
 only where something would otherwise be impossible. The trust layer first built
 for BEAM\_SEMP is being rebuilt there, on Silica.
 
-% TODO-INTERVIEW: How much did BEES shape Silica's approach to connection?
-%   The dates suggest it did; no document says so.
+BEES is older than Silica, at least as an idea, and it is one of the reasons
+Silica exists: no language could do what BEES needed well. As Silica grew and
+its makers learned along the way, some of what had been planned for BEES no
+longer needed to live there, or no longer made sense, and it was dropped. When
+the two projects conflict, Silica wins and BEES changes. The division of labour
+is now clear. Silica provides transport; BEES manages it. The ideas BEAM\_SEMP
+pioneered---peers that come and go, networks that drop and switch beneath a
+conversation, peers judged by how they behave over time---go forward in BEES.
 
 \section{What it costs}
 
@@ -78,6 +123,12 @@ systems would tolerate are turned away.
 \section{What it opens up}
 
 \begin{itemize}
+  \item \textbf{Truly distributed systems.} A single system spanning phones,
+        small connected devices, personal machines and shared ones is extremely
+        hard to build today. What exists instead are separate, independent
+        systems wired together to imitate an integrated one. With connection in
+        the language and its management in BEES, a real one becomes possible,
+        and with it far greater ease, and trust, for the people who use it.
   \item \textbf{One design across many machines.} The same actors, with the
         same kinds of data, can run on a sensor, a gateway and a server, with
         only the connection between them changing.
@@ -117,7 +168,8 @@ Interview, 2026-11-13; also the opening line of the Organism draft.} It is time
 to move on.
 
 What moving on might look like is sketched, in very early form, in a draft
-specification Barney calls Organism.\footnote{\src{https://github.com/yenrab/organism},
+specification Barney calls Organism---one example, in Barney's view, of the
+truly distributed systems this chapter makes possible.\footnote{\src{https://github.com/yenrab/organism},
 Draft Specification v0.3.} In it, a person, or a family or a team, has one
 persistent computational life, and every device they use is simply an organ of
 that life. No single machine is in charge. Actors take the place of processes
@@ -142,4 +194,5 @@ in Silica, and hopes to begin soon. If that happens, a language that started on
 24~December 2025 with the realisation that its creator was solving the wrong
 problem will have found the right one.
 
-% TODO-INTERVIEW: Organism and SEMP — how do SEMP's churn ideas feed Organism?
+% TODO-VERIFY: When the Silica network stack replaces the C sockets, update
+%   "Trust nothing that arrives" and Chapter 9.

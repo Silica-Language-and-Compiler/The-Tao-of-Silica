@@ -80,10 +80,10 @@ uses it.
 The BEAM\_SEMP project of 2025 spent two months removing dangerous defaults
 from a running Erlang system: stopping peers from creating new names, from
 loading code, from calling functions remotely. In Silica, most of those
-defaults never exist in the first place. There was nothing to remove.
-
-% TODO-INTERVIEW: SEMP judged peers by their behaviour over time. Silica has
-%   no counterpart yet. Dropped, or waiting?
+defaults never exist in the first place. There was nothing to remove. SEMP's
+other idea, judging peers by how they behave over time, was not dropped. It
+belongs to managing connections rather than making them, and so it goes forward
+in Project BEES (Chapter~\ref{ch:transport}).
 
 \section{Authority you can see}
 
