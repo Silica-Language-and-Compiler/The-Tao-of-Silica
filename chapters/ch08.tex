@@ -57,8 +57,12 @@ existed before both generics and object-oriented classes, and they feel
 different enough that newcomers do not mistake one for the
 other.\footnote{Interview, 2026-11-13.}
 
-% TODO-INTERVIEW: The standard library's collections are told what kinds of
-%   values they hold. Clarify for readers how that differs from generics.
+A careful reader may notice that Silica's standard collections are told what
+kinds of values they hold, and wonder whether that is generics under another
+name. Barney's answer is that the two point in opposite directions. Generics
+hide the shape of data behind a placeholder. Silica's collections state it
+openly, so the shape is never lost and there is never a question about what is
+being used. They serve different purposes.\footnote{Interview, 2026-11-14.}
 
 \section{Written for people and for machines}
 
@@ -80,6 +84,13 @@ contribution belongs to the person who submits it, and no one may present a
 model's words as their own. The machine types; the human judges, and answers
 for the result.
 
+Asked what that looks like ten years from now, Barney returns to the studio of
+the Dutch masters (Chapter~\ref{ch:failsoft}, Section~\ref{sec:studio}).
+Programming will be like any other art form. The person grounded in reality, who
+knows what they want, does the conceiving and the judging. The AI models do the
+typing. And it is the human's task to make sure the finished work is what they
+set out to make.
+
 \section{The temperament behind it}
 
 The same instinct shows outside the language. A small tool the project designed
@@ -88,7 +99,23 @@ full editor, not a platform, not dependent on someone else's kit. Small,
 native, understandable. Silica's simplicity is that temperament applied to a
 language.
 
-% TODO-INTERVIEW: Where does that instinct come from for you?
+The instinct goes back to childhood. For as long as Barney can remember, simple
+has seemed better, because the more complicated something is, the more places it
+has to hide problems. Years in the simulation industry turned the instinct into a
+practice. When working out with a customer what a piece of software should be,
+one of the most important things to agree was what it would \emph{not} do. Those
+boundaries kept the scope from creeping and kept the specification
+comprehensible: a document that both the makers and the users could understand
+and rely on. When a bug was reported, both sides could turn to it and see whether
+the behaviour was a mistake or a choice.
+
+Barney found that working inside such bounds was liberating, and finds the same
+in music. A bass clarinet in junior high, fiddle lessons as an adult: an
+instrument is freeing precisely because its design imposes limits, and getting
+lost in the sound when it comes out right depends on them. Creative work always
+needs boundaries, and a programming language's power lies in limits its users
+can turn to their advantage.\footnote{``Creative acts always require
+boundaries.'' Interview, 2026-11-14.}
 
 \section{What it costs}
 
@@ -96,6 +123,13 @@ Some Silica programs are longer than their equivalents elsewhere, because they
 spell out what other languages abbreviate. Experienced programmers miss
 favourite features. And some patterns that are one line in another language take
 a moment's thought to express with fewer, plainer pieces.
+
+The temptation to soften this has been real. At one point Barney considered
+adding aliases, alternative names that would make programs easier for people to
+read. A trusted sounding board advised against it: aliases would take away the
+very quality that made the language remarkable, its beauty. Barney held firm.
+Aliases would have made Silica a little easier for humans and harder for
+language models to write correctly, and that trade was not worth making.
 
 \section{What it opens up}
 
@@ -112,5 +146,5 @@ a moment's thought to express with fewer, plainer pieces.
         to understand, so they can understand it more deeply.
 \end{itemize}
 
-% TODO-INTERVIEW: What does a world of human judges and machine typists look
-%   like to you, ten years out?
+% TODO-INTERVIEW: The trusted sounding boards behind the do...end and alias
+%   decisions: the same person? Named with permission?

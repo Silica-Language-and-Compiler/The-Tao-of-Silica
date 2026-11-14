@@ -13,7 +13,7 @@ Running log kept by the `ghostwriter` skill.
 | 5 | Independence — Share Nothing | 1 | woven 2026-11-13 (new section: The end of one size fits all) |
 | 6 | Resilience — Fail Gently, Never Silently | 1 | woven 2026-11-14 (new sections: The loop that heals, with figure; The master's studio; Helping each other up) |
 | 7 | Predictability — Leave Nothing to Chance | 1 | woven 2026-11-13 (new sections: The heap and the file; Proof before code) |
-| 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
+| 8 | Simplicity — One Way to Do Each Thing | 1 | woven 2026-11-14 |
 | 9 | Accountability — Make Danger Visible | 1 | woven 2026-11-14 (new section: For everyone who answers for software) |
 | 10 | Rigor — Refuse the Almost Right | 1 | woven 2026-11-14 |
 | 11 | Fidelity — Respect the Machine | 1 | woven 2026-11-14 (new figure: hourglass vs channel) |
@@ -453,3 +453,41 @@ To verify:
 Woven (author approved): ch09 (no inbound calls as separation of roles; the
 spreading mark stays; trusting users and AI-highlighted danger; Organism early
 stage; users who can see and choose; For everyone who answers for software).
+
+### 2026-11-14 (sixth) — Chapter 8 (Simplicity)
+Transcript: `sessions/2026-11-14-ch08-simplicity.md`. 6 questions.
+
+Learned:
+- **Simple has always been better, since childhood:** complicated things are
+  more likely to hide problems.
+- **Boundaries from the simulation industry:** with customers, one of the biggest
+  things to lay out was what the software would *not* do — keeping scope creep
+  down and the spec comprehensible, a document both provider and user could
+  understand and rely on; a reported bug could be checked against it (bug, or
+  chosen behaviour?). Working within bounds is liberating.
+- **Music:** bass clarinet in junior high; fiddle lessons as an adult. Getting
+  lost in the sound when you get it right is freeing. Creative acts always
+  require boundaries; languages are powerful because they give limits you can
+  use creatively.
+- **Collections vs generics:** generics hide data shapes; Silica's data
+  structures elevate them so they aren't lost and there's no question what's
+  used. Different purposes.
+- **Aliases rejected:** tempted to add aliases for human readability; a trusted
+  sounding board (unnamed; by role) advised against — it would reduce the
+  language's "amazingness" and "beauty". Held firm: easier for humans, harder for
+  LLMs to generate correct code.
+- **Ten years out:** like any art form, like the Dutch masters — the person
+  grounded in reality who knows what they want does the judging and the
+  conceptualization; AIs do the typing; humans ensure the result is what they
+  wanted.
+
+New open threads:
+- Two decisions now shaped by trusted sounding boards (do...end, aliases):
+  same person? Named with permission?
+
+To verify:
+- Nothing new.
+
+Woven (author approved): ch08 (temperament: childhood, simulation-industry
+boundaries, music; collections vs generics; aliases rejected; ten-year view as
+the Dutch masters' studio).
