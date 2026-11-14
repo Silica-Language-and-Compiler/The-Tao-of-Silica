@@ -1,0 +1,250 @@
+# Interview progress
+
+Running log kept by the `ghostwriter` skill.
+
+## Coverage by chapter
+
+| Ch | Title | Sessions | Status |
+|---|---|---|---|
+| 1 | Why? and Why Not? | 1 | woven 2026-11-13 (new sections: The wrong problem; A recovery, and a new kind of reader) |
+| 2 | How We Got Here | 0 | draft (ideas + opportunities) |
+| 3 | Honesty — Hide Nothing | 1 | woven 2026-11-13 (new section: Honest about the tools) |
+| 4 | Transparency — Say What You Do | 1 | woven 2026-11-13 |
+| 5 | Independence — Share Nothing | 1 | woven 2026-11-13 (new section: The end of one size fits all) |
+| 6 | Resilience — Fail Gently, Never Silently | 0 | draft (ideas + opportunities) |
+| 7 | Predictability — Leave Nothing to Chance | 1 | woven 2026-11-13 (new sections: The heap and the file; Proof before code) |
+| 8 | Simplicity — One Way to Do Each Thing | 0 | draft (ideas + opportunities) |
+| 9 | Accountability — Make Danger Visible | 0 | draft (ideas + opportunities) |
+| 10 | Rigor — Refuse the Almost Right | 0 | draft (ideas + opportunities) |
+| 11 | Fidelity — Respect the Machine | 0 | draft (ideas + opportunities) |
+| 12 | Connection — Speak Across Every Boundary | 0 | draft (ideas + opportunities) |
+
+## Open threads
+
+- **Opportunities.** Every principle chapter now ends with *What it opens up*,
+  drafted from the documents. These are the narrator's reading; the author's own
+  view of what each principle makes possible is the main thing to draw out.
+
+- Verify all `% TODO-VERIFY` items (agent-recorded quotes) before weaving.
+- Dates: BEAM_SEMP last commit (2025-10-09 vs 2025-10-31); additional-rules
+  spec dated 2025-02-12 (typo?).
+
+## Corrections from the author
+
+- 2026-11-13: A crash in foreign C code ends only the dangerous actor, which is
+  restarted by its supervisor; ch06 and ch09 corrected.
+
+## Sessions
+
+### 2026-11-13 — Chapter 1 (Why? and Why Not?) + voice
+Transcript: `sessions/2026-11-13-ch01-why.md`. 13 questions.
+
+Learned:
+- **Voice decided: third person.**
+- The 2024 paper was not self-initiated: a member of the EEF approached Barney
+  at CodeBEAM San Francisco (a professional conference) to write an article
+  arguing, if the data supported it, that BEAM languages belonged on the
+  agencies' memory-safe list. Barney followed the data, not the advocacy:
+  honesty and truth over advocacy; neither the BEAM nor Silica is perfect.
+- Earliest memory of the safety question: Java feeling far safer than the
+  C/C++ Barney wrote in industry.
+- **New precursor: a Rust port of the BEAM (2025)**, prompted by people asking
+  what the "memory-safe" Erlang VM is written in (C). On **24 December 2025**,
+  well along in that port, Barney paused and saw it was the wrong problem:
+  forcing a language not designed for BEAM ideas to express them (square pegs,
+  round holes). A few minutes' search found no language that could express
+  the SwErl/SEMP ideas and stay memory safe; initial designs took a few hours.
+- **June 2025 mini-stroke (ON THE RECORD).** Could not read; complex thought and
+  speech were restricted. The Rust re-engineering work helped recovery, which
+  eventually allowed the "wrong problem" insight. Now learning Tagalog.
+  Author wants it told so others in similar situations know they are not
+  alone.
+- *Language is language, human or computer* is a **lifelong view, not the
+  insight** (author correction): a self-described language geek who has loved
+  languages of all kinds for decades and once considered a linguistics major.
+- **Origin of LLM-friendliness:** during recovery Barney relied on LLMs for
+  coding and saw them struggle with languages written for human-only
+  understanding; building a language that works with what LLMs do well looked
+  easier than fighting them. They struggled most with deep nests of
+  user-named types (by analogy, deep inheritance) → no user-named types.
+- Generics: seen as a fad that did not reduce complicatedness in practice;
+  seeing the data shape lets you reason realistically. Removal is now a
+  conviction, not "for now". Traits are distinct: older than generics and OO
+  classes, with a different feel newcomers don't confuse with generics.
+- Fifi: Barney didn't want it; added so programmers of boards and operating
+  systems (cars, power, water, networks), steeped in C and the PDP-11 model,
+  could adopt Silica gradually. What attracts those who do look: expressing
+  the device's reality directly — memory types the chip enforces (e.g.
+  atomic memory), audited/authenticated pointers.
+
+New open threads:
+- The Rust BEAM port: where is it, how far did it get, does it survive?
+- The 24 December scene: where, what was on screen, what happened next.
+- Traits vs generics: the standard library's type parameters (e.g. ordered
+  map) — clarify for readers how this differs from generics.
+- Who at the EEF (name only with permission); CodeBEAM SF year (2024?).
+
+To verify:
+- CodeBEAM San Francisco date (likely March 2024, matching the outline).
+
+Woven (author approved): ch01 (origin of the paper, Rust port, 24 December,
+recovery and LLMs, language geek), ch02 (Before Silica), ch08 (named types,
+generics, traits, LLM origin), ch09 (A bridge, reluctantly built), ch11 (what
+draws bare-metal programmers).
+
+### 2026-11-13 (second) — Chapter 3 (Honesty)
+Transcript: `sessions/2026-11-13-ch03-honesty.md`. 10 questions.
+
+Learned:
+- **The first dishonesty Barney saw was the optimizer.** Beyond removing no-ops
+  and duplication, optimizers spend most of their effort converting PDP-11
+  behaviours into modern chip behaviours — yet knowledgeable people call such
+  languages "close to the metal". They aren't.
+- David Chisnall's ACM article "C Is Not a Low-level Language" (2018) first
+  gave words to that nagging concern; the ideas stayed at the front of
+  Barney's mind from publication, but there were no tools to act at scale.
+- **LLMs were the missing tool**: an "army of developers on my team" (a
+  colleague's phrase), not vibe-coding. Example: SwErl–BEAM node
+  communication took well over a month by hand; about 20 minutes with LLMs,
+  the Erlang/BEAM docs and Barney's guidance.
+- Trust in LLM code grew over time: hard to separate hype (for and against)
+  from truth until used on something significant; models and tooling
+  improved; more Silica code gave the models patterns.
+- **AI policy is out of date**: trust must shift to the contributor using the
+  tool; wording still being worked out.
+- What honesty opens up: easier for LLMs to reason about, debug and extend;
+  Barney uses no IDE or editor (occasionally vim), lowering cognitive load.
+  For reviewers/auditors: `dangerous_` trees show where bugs most likely live;
+  visible data types; "the code you see is the code that runs."
+- **Hidden heap**: an "oh...crap" moment — pushing hard for behaviour without
+  watching what the "highly focused, yet unscrupulous" workers produced.
+  Since then: more reviews, automated where possible, multiple checks against
+  the design documents.
+
+New open threads:
+- How should the new AI policy read? (Revisit when written.)
+- Defaults Barney has been tempted to allow (ch03 TODO, not asked).
+
+To verify:
+- Chisnall, "C Is Not a Low-level Language: Your computer is not a fast
+  PDP-11," ACM Queue 16(2), 2018 — exact title and issue.
+
+Woven (author approved): ch03 (optimizer insight + Chisnall; Honest about the
+tools; hidden-heap reaction and review practice; opportunities), ch10 (link
+from refusal to the optimizer insight), ch02 (army of developers, reviews).
+
+### 2026-11-13 (third) — Chapter 5 (Independence)
+Transcript: `sessions/2026-11-13-ch05-independence.md`. 9 questions.
+
+Learned:
+- **SwErl lineage confirmed, with different lessons than drafted:** (1)
+  supervisors were nearly impossible — no clean way for a crashing actor to
+  report to its supervisor before disappearing, so restarts couldn't be done
+  well; (2) an actor needs only stored state and a function — no hand-written
+  hidden lock to wait for messages, no "spawned and alive" limbo; (3) actors
+  can be fairly simple to implement; (4) trait-like code modelled on Erlang's
+  templates was cumbersome and uncomfortable. "Good first exploration."
+- Writing the compiler let Silica build failure reporting on what chips and
+  OSes themselves can report.
+- **No automatic load balancing: "Not hiding is the principle."** Programmers
+  can write the balancing that best fits their application. One-size-fits-all
+  was useful when code was expensive; with fast code generation Barney is no
+  longer sold on it — even Silica can reasonably be forked (e.g. a unique
+  codec and data shapes for transport).
+- **Answer to the fragmentation critique:** the critic was right in the past.
+  Communities still form around shared knowledge, but the knowledge is now how
+  to make "this piece of rock" do what's needed — manipulating the language
+  rather than libraries. Libraries remain and are shared, but anyone can adapt
+  them to their exact need, because of today's LLMs.
+- **Vision:** today's systems are static because of history (weak machines,
+  humans as the bottleneck). Picture millions of distributed nodes spawning,
+  using and discarding single-use actors around a smaller persistent core.
+  The BEAM ("a work of genius and inspiration") assumed stable, safe
+  environments; SEMP took it a step further, toward churn: devices off,
+  networks down, Ethernet→Wi-Fi→Bluetooth mid-conversation, phones rebooting,
+  apps stopped by calls. Devices are a mess: duplicate installs, per-device
+  operating systems with a late-1950s/early-1960s design. "The operating
+  system wars are over. Everybody lost… It is time to move on."
+- **Organism** (github.com/yenrab/organism, draft spec v0.3): "very early
+  imaginings" of what comes next — one persistent computational life across
+  devices as organs; actors, messages, capabilities, runtime persistence.
+  Barney sees no reason it couldn't be built in Silica and hopes to soon.
+- **Verified:** Barney refused to scale back "millions of actors" to a library:
+  actors tied one-to-one to threads would be a facade for a thread — "false and
+  untruthful".
+
+New open threads:
+- Organism and SEMP: how SEMP's churn ideas feed Organism.
+
+Woven (author approved): ch05 (SwErl lessons, verified refusal, The end of one
+size fits all, churn vision), ch06 (SwErl supervision lesson), ch12 (new closing
+section: Beyond the operating system — Organism; author chose ch12 over an
+epilogue).
+
+### 2026-11-13 (fourth) — Chapter 7 (Predictability)
+Transcript: `sessions/2026-11-13-ch07-predictability.md`. 9 questions.
+
+Learned:
+- **Rust as theatre:** managing sharing and transfers is like producing a
+  musical whose actors are all young and unstable — given enough time, you can
+  make it happen.
+- **Silica's picture:** everything predictable; no sharing; everything via the
+  stack; use a variable after passing its data to a function and the compiler
+  refuses.
+- **The insight behind the stack decision:** the heap and file storage are two
+  expressions of the same thing, unsafe for the same reason — something else
+  may have changed the data since you stored it. At the deepest level, heap
+  use and persistent storage are the same.
+- **Local persistent storage uses transport**: same conversion checks, same
+  codecs. Safe transport is safe transport, persistent or not, local or
+  network.
+- **Verified:** reclamation must be deterministic, not GC-like — because without
+  determinism you cannot later prove the code correct (think Lean proofs).
+- **Proof first:** formal proof of correctness is a goal (in the spec and the
+  development plan). A proof written before the code makes it easier for LLMs
+  to implement correctly, if done in an LLM-friendly way. The human writes the
+  proof and bears full responsibility; models may assist.
+- **Most important opportunity:** what can't yet be imagined — what interested
+  people will build on a stable foundation; stable yet flexible systems;
+  questions previously infeasible to answer.
+
+To verify:
+- Where formal proof appears in the specification and the development plan
+  (silica-formal-verification-specification.md; ROADMAP).
+
+Woven (author approved): ch07 (theatre image, verified determinism line, The
+heap and the file, Proof before code, the unimagined opportunity), ch10 (proof
+first), ch12 (storage uses transport).
+
+### 2026-11-13 (fifth) — Chapter 4 (Transparency)
+Transcript: `sessions/2026-11-13-ch04-transparency.md`. 7 questions.
+
+Learned:
+- **Verified:** 238 of 254 function-level effect declarations were decorative.
+- A shift in perspective: a functional language need not put effects at the
+  function level. Function-level declaration was "too gross" — the sieve too
+  coarse; effects piled up and muddied the declaration. One way to do
+  something; everything should do one thing and do it well.
+- `do...end` blocks were tried and rejected after feedback from an engineer
+  Barney respects: overused in other languages, so Silica's meaning would need
+  constant explaining — cognitive load for readers, confusion for LLMs. Hence
+  `sequence ... produces pure ... end`.
+- **Answer to the Haskell objection:** propagating callees' effects up the
+  chain loses signal in noise. That's also why `dangerous_` moved to the
+  module name: pure signal.
+- What it opens up: LLMs hitting a missing or unnecessary effect error know
+  exactly where to fix it; several effect blocks can sit in one function and
+  inside one another — the monad stands out instead of hiding.
+- **Memory as an effect:** memory safety is a foundational reason for Silica;
+  all direct memory use is unsafe, must be called out and intentional, with
+  some pain so it doesn't happen too often with too little thought — the
+  problem with memory as an invisible service.
+- **Friction vs busywork:** calling something out without being obtuse is
+  useful friction; busywork drives people away.
+
+New open threads:
+- The engineer who gave the do...end feedback (name only with permission).
+
+Woven (author approved): ch04 (do...end history, coarse sieve, verified
+238/254, signal vs noise, memory safety and deliberate pain, friction vs
+busywork, opportunities), ch09 (dangerous_ as pure signal).

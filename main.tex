@@ -1,0 +1,54 @@
+% =====================================================================
+%  The Tao of Silica — main file
+%  Build:  latexmk          (uses .latexmkrc → LuaLaTeX, output in build/)
+% =====================================================================
+\documentclass[11pt,twoside,openright]{memoir}
+
+% ---- Book metadata (used on the cover, title page and PDF info) -----
+\newcommand*{\booktitle}{The Tao of Silica}  % full title (PDF info, running heads)
+\newcommand*{\booktitletop}{The Tao of}    % small first line on cover/title page
+\newcommand*{\booktitlemain}{Silica}       % large second line
+\newcommand*{\booksubtitle}{Subtitle Goes Here}
+\newcommand*{\bookauthor}{Anonymous}
+\newcommand*{\bookyear}{2026}
+
+\usepackage{taosilica}
+
+\setcoverimage{images/cover.jpg}
+
+\begin{document}
+
+% ---- Cover ----------------------------------------------------------
+\makecover
+\cleardoublepage
+
+% ---- Front matter ---------------------------------------------------
+\frontmatter
+\input{frontmatter/titlepage}
+\input{frontmatter/copyright}
+\tableofcontents*
+\listoffigures*
+\input{frontmatter/preface}
+
+% ---- Main matter ----------------------------------------------------
+\mainmatter
+\part{The Questions and the Story}
+\input{chapters/ch01}
+\input{chapters/ch02}
+\part{The Principles}
+\input{chapters/ch03}
+\input{chapters/ch04}
+\input{chapters/ch05}
+\input{chapters/ch06}
+\input{chapters/ch07}
+\input{chapters/ch08}
+\input{chapters/ch09}
+\input{chapters/ch10}
+\input{chapters/ch11}
+\input{chapters/ch12}
+
+% ---- Back matter ----------------------------------------------------
+\backmatter
+\input{backmatter/acknowledgments}
+
+\end{document}

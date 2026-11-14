@@ -1,0 +1,145 @@
+% =====================================================================
+%  Chapter 12 — Principle: Connection (Speak Across Every Boundary)
+%  Map: research/chapter-map.md (Chapter 12)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Speak Across Every Boundary}
+\chapter{Connection}
+\label{ch:transport}
+
+Moving data between devices is as basic to modern computing as arithmetic.
+Yet most languages leave it to libraries, each with its own way of packaging
+data, its own ways of failing and its own security holes. Silica treats the
+movement of data between machines as a full and equal part of the language
+itself, understood by the compiler and checked like everything
+else.\footnote{Specification §1.2,
+\src{silica/compiler/design_documents/silica-specification.md}, line 28.}
+
+\section{The long road to the network}
+
+This principle has the longest history of any in the book. SwErl's unfinished
+work of 2024 could already let a Swift program join a cluster of Erlang
+machines. BEAM\_SEMP's work of 2025 made such connections trustworthy: every
+peer had to prove its identity, only known peers were admitted, and each
+connection was handled on its own. Both ideas reappear, almost unchanged, in
+Silica's designs.
+
+\section{In, out, and in again}
+
+Inside Silica, the road was not straight. In September 2026 networking was
+made part of the language. Within days that was reversed. Then, in November, a
+third position emerged, and it is the principle. The plumbing of networks---the
+operating system's connections and ports---is not the language's to own. But
+\emph{what} travels between machines, how it is packaged, and how it is checked
+when it arrives are questions about data and meaning, which is to say questions
+for the language.
+
+% TODO-INTERVIEW: The three changes of position: why not networking, why not
+%   a library, and why is moving data different from plumbing?
+
+\section{Trust nothing that arrives}
+
+Silica treats every byte that arrives from elsewhere as untrusted. Checking and
+unpacking are the same act: data is either fully valid or it is refused, never
+half-accepted. The ways data can be packaged and carried form a fixed set
+defined by the language, so no program can quietly invent a weaker one. Adding
+a new way is a change to the language, examined like any other.
+
+The same rule covers data a program stored itself. Silica's local persistent
+storage uses the same transport, so a file read back from a disk is checked
+exactly as a message from another machine would be: something may have changed
+it since it was written (Chapter~\ref{ch:memory}).
+
+The simplest connection Silica offers is documented as exactly that: no
+encryption, no identity. Secure exchange is being built on top of it, openly.
+
+\section{Speaking an old friend's language}
+
+The first way Silica packages data is Erlang's own. Silica machines can
+exchange data with Erlang systems, and Project BEES---an effort to let programs
+written in Erlang, Elixir, Gleam and LFE be compiled to Silica---had two Silica
+machines speaking Erlang's distribution protocol by November 2026. BEES's rule
+is modest and telling: make it possible, not easy, and ask Silica to change
+only where something would otherwise be impossible. The trust layer first built
+for BEAM\_SEMP is being rebuilt there, on Silica.
+
+% TODO-INTERVIEW: How much did BEES shape Silica's approach to connection?
+%   The dates suggest it did; no document says so.
+
+\section{What it costs}
+
+Making connection part of the language means every new way of packaging or
+carrying data must earn its place in the language itself, which is slower than
+writing a library. And refusing half-valid data means some messages other
+systems would tolerate are turned away.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{One design across many machines.} The same actors, with the
+        same kinds of data, can run on a sensor, a gateway and a server, with
+        only the connection between them changing.
+  \item \textbf{A safer edge.} Arriving data is always checked by routines
+        the compiler generates from the type of data the program expects,
+        not by hand-written parsing code, so a whole family of attacks on
+        data parsing has nowhere to start.
+  \item \textbf{A bridge to a living ecosystem.} Through Erlang's own format,
+        decades of Erlang and Elixir systems can talk to Silica, and through
+        BEES their programs may one day run on machines the Erlang virtual
+        machine cannot reach.
+  \item \textbf{Fleets that are trustworthy by default.} Devices in the field
+        can be built to admit only known peers, the lesson of BEAM\_SEMP made
+        part of the foundation.
+\end{itemize}
+
+\section{Where the principles meet}
+
+Connection is where the book's principles come together: independent actors
+(Chapter~\ref{ch:actors}), effects stated where they happen
+(Chapter~\ref{ch:effects}), danger made visible (Chapter~\ref{ch:danger}) and one
+meaning on every machine (Chapter~\ref{ch:machines}). A program that keeps all of
+those promises on one machine can keep them across many.
+
+\section{Beyond the operating system}
+
+Asked what all of this is finally for, Barney points past programming
+languages altogether, to the way our devices are organised. They are, in
+Barney's view, a mess. The same word processor is installed again and again, on
+every machine a person owns. Every one of those machines carries its own
+operating system, an arrangement whose basic design, as Barney sees it, was set
+in the late 1950s and early 1960s, and each wastes space and attention on its own
+copy. Barney's verdict on decades of competition between operating systems is
+that nobody won: not the users, and not the companies that made
+them.\footnote{``The operating system wars are over. Everybody lost.''
+Interview, 2026-11-13; also the opening line of the Organism draft.} It is time
+to move on.
+
+What moving on might look like is sketched, in very early form, in a draft
+specification Barney calls Organism.\footnote{\src{https://github.com/yenrab/organism},
+Draft Specification v0.3.} In it, a person, or a family or a team, has one
+persistent computational life, and every device they use is simply an organ of
+that life. No single machine is in charge. Actors take the place of processes
+and threads, and every interaction is a message. Authority comes only from
+capabilities, never from ambient permissions. Keeping things alive across
+restarts, moves between devices and even the loss of a device is the system's
+job, not each application's. Files give way to a shared, content-addressed
+memory. A user interface is a temporary projection of actors that can appear on
+whichever device is at hand. Failure is treated as normal, something to
+contain and heal rather than to fear.
+
+Read against this book, Organism is the ten principles at the scale of a
+person's whole digital life. Independent actors are its basic unit
+(Chapter~\ref{ch:actors}). Authority you can see is its security model
+(Chapter~\ref{ch:danger}). Failing gently is its everyday behaviour
+(Chapter~\ref{ch:failsoft}). And connection across devices that sleep, wake and
+roam is its reason to exist.
+
+Organism is not built. It is an imagining, and its own pages list the research
+it still needs. But Barney sees no reason something like it could not be built
+in Silica, and hopes to begin soon. If that happens, a language that started on
+24~December 2025 with the realisation that its creator was solving the wrong
+problem will have found the right one.
+
+% TODO-INTERVIEW: Organism and SEMP — how do SEMP's churn ideas feed Organism?

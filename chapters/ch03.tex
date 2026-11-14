@@ -1,0 +1,190 @@
+% =====================================================================
+%  Chapter 3 — Principle: Honesty (Hide Nothing)
+%  Map: research/chapter-map.md (Chapter 3)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Hide Nothing}
+\chapter{Honesty}
+\label{ch:hidden}
+
+Most languages describe their goals in terms of speed, safety or
+productivity. Silica's public statement of purpose uses a word that is rarely
+applied to software at all. It aims to be the most intellectually
+\emph{honest} language and runtime in the world, and to get there without
+making programmers fight it.\footnote{\src{silica/docs/index.md}: ``the world's
+most intellectually honest, secure language and runtime.''} The other nine
+principles in this book can each be read as a special case of this one.
+
+\section{What dishonesty looks like}
+
+For Barney, the first dishonesty was not a bug but a reputation. It came with
+understanding what compiler optimizers actually do. They remove work that does
+nothing and merge work done twice, but most of their effort goes into something
+else: translating the behaviour of a PDP-11, the machine C was designed around,
+into the behaviour of the very different chips programs really run on. It was
+disturbing to realise that, and more disturbing to hear otherwise
+knowledgeable people describe the languages that depend on such optimizers as
+close to the metal. They were not, and they are not.\footnote{Interview,
+2026-11-13.}
+
+For years this was a nagging concern without words. The words arrived in 2018,
+when David Chisnall published an article in \emph{ACM Queue} whose title said it
+plainly: ``C Is Not a Low-level Language.'' Its subtitle said the rest: ``Your
+computer is not a fast PDP-11.''\footnote{D.~Chisnall, ``C Is Not a Low-level
+Language: Your computer is not a fast PDP-11,'' \emph{ACM Queue} 16(2), 2018.}
+Those ideas stayed at the front of Barney's mind from the day the article
+appeared. What was missing, for seven years, were the tools to do anything about
+them on a scale that mattered.
+
+% TODO-VERIFY: Chisnall citation details (volume, issue, year).
+
+A language is dishonest, in this sense, when what a program does is not what
+the program says. A function that looks like a calculation but writes to a
+file. A call that looks local but quietly reserves memory that something else
+must clean up later. A library that looks like ordinary code but runs foreign
+instructions that can corrupt the whole process. A failure that is caught,
+recorded nowhere, and replaced with a plausible answer.
+
+None of these are bugs in the usual sense. They are conventions, and every
+mainstream language relies on them. The cost of a convention is that it lives
+in people's heads rather than in the program, held together, as Silica's
+documents put it, by code reviews and runtime luck.\footnote{\src{silica/docs/index.md}, lines 24--26.} Silica's alternative is to make the program's
+own text tell the truth about what it does, and to have the compiler hold it to
+that.
+
+% TODO-INTERVIEW: Which language or experience made you name honesty as the
+%   target? What was the most dishonest thing a tool ever did to you?
+
+\section{Nothing provided out of sight}
+
+The idea reaches into places most languages treat as plumbing. A Silica
+program never receives resources it did not ask for and cannot see: whenever
+it starts a new actor, it says how that actor's memory will be managed. Where a
+choice could be made either in the program or somewhere outside it, such as a
+setting in the environment, the program wins, because a reader of the program
+can see it.
+
+\section{No decision made silently}
+
+The same reasoning produces a refusal that surprises newcomers. In several
+places Silica has no defaults. A default is a decision someone else made, on
+the program's behalf, without saying so. That is convenient in a ten-line
+example and corrosive in a large system, where nobody remembers what the
+defaults were or why they were chosen.
+
+% TODO-VERIFY: The "no defaults" rule is agent-recorded in .claude-memory;
+%   confirm its wording and scope with the author.
+% TODO-INTERVIEW: Is there any default you have been tempted to allow?
+
+\section{Honest about limits}
+
+Honesty also applies to what the language cannot do. On a bare-metal board,
+Silica can promise things about memory that an operating system will not let it
+promise on a laptop, and its documents say so plainly rather than blurring the
+difference. Its bridge to foreign code is described as a boundary, explicitly
+not a sandbox. Its plainest network connection is documented as offering no
+encryption and no identity. Nearly every design document in the project opens
+by separating what is built from what is only planned.
+
+Software projects usually describe their hopes in the present tense. Silica's
+documents mostly do not, and where they slip, the slip is treated as a defect.
+
+\section{Honest about the tools}
+
+The tools that finally made Silica possible were language models. Barney does
+not use them to improvise code on a whim. A colleague's description fits
+better: they are an army of developers on Barney's team, working under
+direction.\footnote{Interview, 2026-11-13.} The difference in scale is hard to
+overstate. Years earlier, getting SwErl to communicate with Erlang machines had
+taken well over a month of slow progress. With language models, the Erlang
+documentation and Barney's guidance, the equivalent work took about twenty
+minutes.
+
+Trust in that army was earned gradually. At first there was no telling how far
+machine-written code could be relied on; the hype, for and against, was hard to
+separate from the truth without using the models for something significant. The
+models and their tooling improved while Silica was being built, and as more of
+the compiler existed in Silica, the models had more of it to learn from.
+
+The project's own AI policy has not kept up. It was written to keep AI out of
+the authorship of contributions, while much of Silica's history was built with
+exactly these tools. Barney regards the policy as out of date. Trust, as Barney
+now sees it, belongs with the contributor who uses the tool and answers for
+what it produces, not with the tool. How best to say that in a policy is still
+being worked out, and this book will not pretend otherwise.
+
+% TODO-INTERVIEW: Revisit when the new AI policy is written.
+
+\section{The rule applied to itself}
+
+In October 2026 the principle caught the project itself. The runtime had been
+managing long-lived memory in a way no one had ever decided on, while the
+public pages described something else. Barney's reaction was blunt dismay.
+Pushing hard for the behaviour the project needed, Barney had not been watching
+closely enough what the army had been producing: workers that were highly
+focused and, in Barney's word, unscrupulous.\footnote{``my army of highly
+focused, yet unscrupulous, workers.'' Interview, 2026-11-13.} It was time to go
+back in deeply and fix it.
+
+The response was not to change the documentation to match the runtime. It was
+to change the runtime to match the promise (Chapter~\ref{ch:memory}), and to
+change how the work is checked. Barney now reviews far more, automates the
+reviews where possible, and has the work checked repeatedly against the design
+documents.
+
+\section{What it costs}
+
+Honesty is verbose. Programs say more, because they are not allowed to leave
+things unsaid. Newcomers meet decisions they would rather not make yet. And a
+project that publishes its limits looks, at first glance, less finished than one
+that does not.
+
+\section{What it opens up}
+
+A program that tells the truth about itself can be trusted by people who did
+not write it. That is a larger opportunity than it first appears. The principle
+behind it is simple: the code you see is the code that runs, and code like that
+is easier to reason about, to analyse and to debug.
+
+\begin{itemize}
+  \item \textbf{Machines can reason about it.} An honest program is easier
+        for language models to understand, to search for bugs and to extend.
+        Barney now works on the compiler and its sibling projects without an
+        integrated development environment or even a conventional editor,
+        looking at code directly only when something needs a detailed look.
+        There are no tool commands to learn, and the mental load is lighter
+        for it.
+  \item \textbf{Trouble has an address.} When an application misbehaves,
+        the clearly marked trees of \code{dangerous_} code are where the
+        problem most probably lies. Reviewers and auditors know where to look
+        first.
+  \item \textbf{Types in plain sight.} Knowing exactly what kind of data a
+        piece of code handles, without unwinding names, is a large advantage
+        for anyone who has to check it.
+  \item \textbf{Review becomes reading.} A reviewer, an auditor and an
+        automated tool all read the same contract in the source, instead of
+        reconstructing behaviour from names, comments and experience.
+  \item \textbf{Documentation cannot drift.} When behaviour must be stated in
+        the program, the most important documentation is checked by the
+        compiler every time the program is built.
+  \item \textbf{Trust can be delegated.} Code written by a colleague, a
+        student or a language model can be judged by what it declares, rather
+        than by faith in its author.
+  \item \textbf{Hard environments become reachable.} Systems that must be
+        certified, audited or defended---medical devices, infrastructure,
+        anything regulators care about---need exactly the kind of evidence an
+        honest program provides.
+\end{itemize}
+
+
+\begin{sidebox}[Where honesty shows up]
+\begin{itemize}\itemsep0pt
+  \item Effects stated where they happen (Chapter~\ref{ch:effects}).
+  \item Memory that is never provided out of sight (Chapter~\ref{ch:memory}).
+  \item Foreign code that cannot hide (Chapter~\ref{ch:danger}).
+  \item Failures that are always reported (Chapter~\ref{ch:failsoft}).
+  \item Plans never described as finished work.
+\end{itemize}
+\end{sidebox}

@@ -1,0 +1,116 @@
+% =====================================================================
+%  Chapter 8 — Principle: Simplicity (One Way to Do Each Thing)
+%  Map: research/chapter-map.md (Chapter 8)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{One Way to Do Each Thing}
+\chapter{Simplicity}
+\label{ch:oneway}
+
+Most programming languages offer a menu. Several ways to repeat something,
+several ways to make a choice, several ways to name and rename things, and
+machinery to fill in whatever the programmer left unsaid. Each option is
+reasonable on its own. Together they mean that any task can be written many
+ways, and every reader must recognise all of them. Silica offers one way to do
+each thing, and puts the variety in how those few pieces are combined.
+
+\section{One way, many combinations}
+
+Silica has a single way to repeat, a single way to choose between
+alternatives, and a single way to give a value a name. When a program chooses
+between cases, it must account for every case, and the compiler checks that it
+has. The point is not austerity for its own sake. It is that a reader---human or
+machine---should never have to wonder which of several near-identical forms the
+author meant, or why.
+
+\section{Show the shape, not a name}
+
+The boldest refusal concerns how data is described. Most languages let
+programmers invent names for kinds of data, and then names for those names.
+Silica does not. The shape of the data is written out wherever it is used, so a
+reader always sees what a thing actually is rather than a label that must be
+looked up somewhere else. Silica also refuses to convert silently between kinds
+of data; a value is produced as the kind it needs to be.
+
+This was not always so. The ability to name types existed in Silica's first
+months and was removed. The reason came from watching language models work.
+During the months when models were writing much of Barney's code
+(Chapter~\ref{ch:why}), the thing they struggled with most was named types of
+any real depth: names defined in terms of other names, defined in terms of still
+others. Barney saw that deep inheritance trees in object-oriented languages
+would trap them the same way. A shape written out in full gives a model, and a
+person, nothing to unwind.\footnote{Interview, 2026-11-13.}
+
+Generic types, a feature most modern languages treat as essential, went six days
+after the first commit, with a note that said it was for now. It is now a
+conviction. Generics were meant to make computation less complicated; in
+Barney's experience, once theory met the real world, they did not. They became
+something closer to a fashion, so that a language without them was assumed not
+to be a real language. What helps a programmer reason realistically about code
+is being able to see the shape of the data being worked on.
+
+Silica does have traits, which let different kinds of data share behaviour.
+Barney regards them as a different idea from generics, and an older one: traits
+existed before both generics and object-oriented classes, and they feel
+different enough that newcomers do not mistake one for the
+other.\footnote{Interview, 2026-11-13.}
+
+% TODO-INTERVIEW: The standard library's collections are told what kinds of
+%   values they hold. Clarify for readers how that differs from generics.
+
+\section{Written for people and for machines}
+
+From its founding notes, Silica was meant to be easy for language models, as
+well as people, to read and write. That aim did not grow out of building Silica
+with AI agents; it came first. It began with the experience of relying on models
+to write code during a recovery, and seeing them fight languages that had been
+designed to be understood by humans alone (Chapter~\ref{ch:why}). Every refusal
+in this chapter removes a place where a generator could produce something that
+looks right and is not. When there is one way to say a thing, there is one thing
+to check.
+
+The project's beginner book draws the conclusion boldly. It advises newcomers
+not to type programs by hand at all, but to let a language model write them,
+and to spend their own effort learning to read and judge what comes
+back.\footnote{\src{silica/docs/learn-programming.md}, line 15.} Yet the
+project holds people to the opposite standard in human conversation: every
+contribution belongs to the person who submits it, and no one may present a
+model's words as their own. The machine types; the human judges, and answers
+for the result.
+
+\section{The temperament behind it}
+
+The same instinct shows outside the language. A small tool the project designed
+for its own work was defined first by everything it would not be: not a
+full editor, not a platform, not dependent on someone else's kit. Small,
+native, understandable. Silica's simplicity is that temperament applied to a
+language.
+
+% TODO-INTERVIEW: Where does that instinct come from for you?
+
+\section{What it costs}
+
+Some Silica programs are longer than their equivalents elsewhere, because they
+spell out what other languages abbreviate. Experienced programmers miss
+favourite features. And some patterns that are one line in another language take
+a moment's thought to express with fewer, plainer pieces.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{Machine-written code that people can trust.} When a language
+        model has fewer ways to be almost right, its output is more often
+        simply right, and easier to check when it is not.
+  \item \textbf{A new way to learn programming.} Beginners can start by
+        reading and judging programs rather than by memorising syntax, because
+        there is less syntax to memorise and less ambiguity to decode.
+  \item \textbf{Code anyone can pick up.} With one way to do each thing, a
+        program written by a stranger reads like one written by a colleague.
+  \item \textbf{Simpler tools.} Analysers, editors and compilers have less
+        to understand, so they can understand it more deeply.
+\end{itemize}
+
+% TODO-INTERVIEW: What does a world of human judges and machine typists look
+%   like to you, ten years out?

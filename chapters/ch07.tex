@@ -1,0 +1,158 @@
+% =====================================================================
+%  Chapter 7 — Principle: Predictability (Leave Nothing to Chance)
+%  Map: research/chapter-map.md (Chapter 7)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Leave Nothing to Chance}
+\chapter{Predictability}
+\label{ch:memory}
+
+Every program needs memory, and every language must decide who gives it back.
+For fifty years there have been two main answers. In C, the programmer frees
+memory by hand, and a single slip can corrupt a program or open it to attack.
+In Java, Go, Erlang and most modern languages, a garbage collector frees it
+automatically, and the program pays with pauses and overhead at moments no one
+chose. Rust added a third answer, in which the compiler tracks ownership.
+Silica's answer is different again, and it rests on a single demand: the
+moment memory is released should be known in advance, every time.
+
+\section{No one sweeping up behind}
+
+Erlang, the language Silica learns most from, depends on a garbage collector.
+When data might be shared, something must notice when the last user has gone,
+and on Erlang's virtual machine that is the collector's job. Silica keeps
+Erlang's independent actors and refuses the collector, so it must answer the
+question another way.
+
+The standard it set itself is strict. Releasing memory must be deterministic
+and predictable, with nothing that behaves like a collector: no thresholds, no
+sweeps, nothing done every so
+often.\footnote{\src{silica/compiler/design_documents/data_structure_redesign_requirements.md}, line 66.}
+When one of the project's AI agents once proposed a sweep that would run when
+memory crossed a threshold, Barney refused it outright. The line is hard for a
+reason that reaches beyond performance: if releasing memory is not
+deterministic, it becomes impossible later to prove, formally, that the program
+is correct (\S\ref{sec:proof}).
+
+Silica's documents are equally unimpressed by the alternatives. Counting
+references costs a little on every change. Rust's ownership rules they dismiss
+as theatre,\footnote{\src{silica/docs/learn-silica.md}, line 27: ``No
+borrow-checker theatre.''} and Barney, who knows Rust well from the bootstrap
+compiler and the BEAM port, means the word almost literally. Getting every share
+and transfer right in Rust feels like producing a musical in which the whole cast
+is young and unstable. Given enough time, the show can go on.\footnote{Interview,
+2026-11-13.} In Silica there is no cast to manage. Nothing is shared, everything
+goes through the stack, and once data has been handed to a function, the
+compiler will not let the old name be used again. Everything is predictable.
+
+% TODO-INTERVIEW: Why write the bootstrap compiler in Rust anyway?
+
+\section{Nothing outlives its home}
+
+The first part of Silica's answer is that every piece of memory belongs
+somewhere, and nothing that points into it may outlive the place it belongs.
+The compiler refuses any program in which a reference could survive its home.
+A dangling pointer---the root of a large share of the world's security
+vulnerabilities---is not merely caught. It cannot be written.
+
+\section{The heap nobody decided}
+
+In October 2026 the project discovered that its runtime had not been doing what
+its documents described. Since the first actors were built, data that had to
+outlive a single step had been copied to a hidden store and released by
+guesswork. The guesses were wrong in both directions: some memory was never
+freed, and some was freed while still in use.\footnote{Commit
+\code{19a7d19a48}, 27~October 2026.} Nobody had ever decided to build that
+store.
+
+What followed was two weeks of design at speed. Ownership by a single holder
+was tried and withdrawn when measured. A store that never gave memory back was
+adopted and abandoned: it was perfectly safe, and it would have grown by
+something like 170 gigabytes an hour on a busy machine. Each rejected design
+taught something about what the right one had to be.
+
+\section{The heap and the file}
+
+What settled the question was an insight about what the heap really is. The
+memory a program borrows for long-lived data and the files it keeps on a disk
+are usually treated as different worlds. Barney came to see them as two
+expressions of the same thing, unsafe for the same reason: something else may
+have changed the data since it was last stored. Beneath the details of how each
+is implemented, using the heap and using persistent storage are the
+same act.\footnote{Interview, 2026-11-13.}
+
+Seen that way, the answer for memory was to stop keeping long-lived data in a
+shared, unguarded place at all, and to keep each actor's data on that actor's
+own stack. The answer for storage followed from the same insight. Silica's
+local persistent storage uses its transport system
+(Chapter~\ref{ch:transport}): data written to a disk and read back is checked and
+converted exactly as data arriving from another machine would be. Safe transport
+is safe transport, whether the data is persistent or not, local or remote.
+
+% TODO-INTERVIEW: When did the heap/file insight come — during the October
+%   fortnight, or earlier?
+
+\section{A known end for everything}
+
+Where it landed is simple to state. Each actor keeps everything it owns in its
+own private space, and the compiler---not a background process, not a
+heuristic---works out when each piece can be released. An idle actor holds no
+working memory at all. Nothing is left to chance.
+
+The new model was built across every desktop and server target by early
+November 2026. It had a price: the compiler, itself written in Silica, briefly
+grew too large to run on a Raspberry Pi, and had to be slimmed down again.
+
+% TODO-INTERVIEW: Is "regions" still the right word for this principle now?
+
+\section{Proof before code}
+\label{sec:proof}
+
+Determinism matters most for what it makes possible later. Proving a program
+correct, in the way proof assistants such as Lean prove properties of code, is
+a stated goal for Silica, in its specification and its development plan. A
+proof is only possible if the program's behaviour is predictable, memory
+included.
+
+Barney imagines reversing the usual order. If the proof of correctness exists
+before the code is written, and is expressed in a way language models can work
+with, it becomes much easier for a model to write code that is correct. In that
+arrangement the proof is the human's work. Models can help, but the proof is the
+full responsibility of the person who is grounded in
+reality.\footnote{Interview, 2026-11-13.}
+
+% TODO-VERIFY: Where formal proof appears in the specification and the
+%   development plan.
+
+\section{What it costs}
+
+The programmer must think about where data lives and how long it is needed,
+questions a collector lets people ignore. Some structures must be copied where
+other languages would share them. And the compiler does more work, which on
+small machines is itself a resource to manage.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{Timing you can promise.} Without collector pauses, a program
+        can respond within a known time---the foundation of control systems,
+        audio, robotics and anything that must not stutter.
+  \item \textbf{Tiny machines.} With no collector to feed and no hidden store
+        to grow, a full actor system fits in half a megabyte.
+  \item \textbf{Whole classes of vulnerability, gone.} Dangling pointers,
+        double frees and use-after-free errors cannot be expressed, so they
+        cannot be exploited.
+  \item \textbf{Capacity you can plan.} Idle actors cost no working memory,
+        so systems with enormous numbers of mostly quiet parts---sensors,
+        connections, users---become affordable.
+  \item \textbf{Programs that can be proved.} Deterministic memory keeps
+        the door open to proving software correct before it is ever run.
+\end{itemize}
+
+None of these is the opportunity Barney cares about most. The one that matters
+most is the one no one can yet imagine. What will curious, capable people build
+on a foundation this stable? What systems will they make that are stable and
+yet remarkably flexible? And which questions, too costly to answer before, will
+they finally be able to answer?

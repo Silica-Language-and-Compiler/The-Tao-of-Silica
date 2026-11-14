@@ -1,0 +1,122 @@
+% =====================================================================
+%  Chapter 4 — Principle: Transparency (Say What You Do)
+%  Map: research/chapter-map.md (Chapter 4)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Say What You Do}
+\chapter{Transparency}
+\label{ch:effects}
+
+A calculation takes values and produces a value. Everything else a program
+does---printing, reading a sensor, sending a message, reserving memory, calling
+foreign code---touches the world. Computer scientists call these
+\emph{effects}. Most languages let effects happen anywhere, unannounced.
+Silica asks that every one be stated, and stated in a particular place: where
+the work is done.
+
+\section{Say it where it happens}
+
+The idea divides a program into two kinds of code. Pure code computes and
+touches nothing; it can be read, tested and reasoned about in isolation.
+Effectful code does things in the world, and in Silica it lives in a distinct
+kind of block that announces exactly which kinds of things it does. The compiler
+checks the announcement against the work. It also refuses a block that claims
+more than it does, because overstating is as misleading as understating.
+
+The intellectual root is the monad, the device Haskell uses to keep effects
+apart from pure computation. Silica keeps the separation and drops most of the
+ceremony.
+
+Even the shape of those blocks was chosen with readers in mind. Barney first
+tried the familiar \code{do} \ldots\ \code{end} form and dropped it after
+feedback from an engineer Barney respects. Those words are used, and overused,
+in so many other languages that Silica would forever have to explain how its
+meaning differed from all the others: extra effort for every human reader, and
+a source of confusion for language models.\footnote{Interview, 2026-11-13.} A
+fresh form carries no borrowed meanings.
+
+\section{Answer for your own work}
+
+Here Silica parts company with most effect systems. In them, if one piece of
+code prints, everything that uses it inherits the obligation, and the
+declaration spreads upward through the whole program. In Silica, each piece of
+effectful code answers for its own work and no one else's. A part of the
+program that merely uses a printing helper says nothing about printing; the
+helper already did.
+
+The question this answers is the one a reviewer actually asks. Not \emph{could
+anything, anywhere beneath this, possibly touch the world?}, but \emph{where
+does this program touch the world?} Local declarations answer it directly,
+because each one sits beside the work it describes.\footnote{The beginner book
+calls this ``the honesty rule'': \src{silica/docs/learn-silica.md}, line 185.}
+
+The rule was learned by doing it the other way first. Early Silica attached
+effects to every function. What changed was a shift in perspective. Silica is a
+functional language, but that does not mean effects belong at the level of the
+function. A declaration on a whole function is too coarse a sieve: effects pile
+up on it, and they muddy a declaration whose job is to say one thing. In Silica,
+as Barney puts it, everything should do one thing and do it well. When the
+compiler's own source was converted to the new rule, 238 of its 254
+function-level effect declarations turned out to describe nothing the function
+itself did. They had been decoration.
+
+The same thinking answers the objection a Haskell programmer will raise: that if
+effects do not climb the call chain, a function's type no longer reveals whether
+calling it touches the world. That climbing was exactly the idea behind putting
+effects on functions in the first place, and it is what Barney found wanting.
+When every function's declaration must also carry the effects of everything it
+calls, the signal is lost in the noise. It is one of the reasons the marker for
+foreign code was moved out of declarations altogether and into the names of
+modules, where \code{dangerous_} is pure signal (Chapter~\ref{ch:danger}).
+
+\section{Even memory must be declared}
+
+The most unusual of Silica's effects is memory itself. Reserving or growing
+storage is treated as an effect like any other. A pure calculation cannot
+quietly consume memory, and code that does must say so and say what kind of
+memory it uses. In most languages, memory is an invisible service; here it is
+part of what a program admits to doing.
+
+The reason goes to the root of the project. Memory safety was, and remains, one
+of the foundational reasons for Silica, and in Barney's view all direct use of
+memory is unsafe. It must therefore be called out, and it must be intentional.
+That means a little deliberate pain. If reserving memory costs nothing to write,
+it happens too often and with too little thought, which is precisely the trouble
+with treating memory as an invisible service.
+
+\section{What it costs}
+
+Programs say more. Even a beginner's first program must admit where its memory
+comes from. And because declarations do not spread upward, knowing that a piece
+of code is used tells you nothing about what it does inside; you look where the
+work is.
+
+The pain is real, and it is meant to be. Barney draws the line carefully.
+Calling something out, plainly and without obscurity, is useful friction: it
+makes people think. Making them do busywork is something else, and it drives
+them away.
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{A map of contact with the world.} Every place a program
+        touches files, devices, networks, memory or foreign code is marked in
+        the source. Security reviews, safety cases and code audits start from
+        that map instead of building one.
+  \item \textbf{Pure code that is genuinely free.} Code that declares nothing
+        can be tested without a world to test it in, reused without fear, and
+        reasoned about without tracing what lies beneath.
+  \item \textbf{Memory budgets you can see.} On a device with half a megabyte
+        of memory, knowing exactly which code reserves storage is the
+        difference between a product and a prototype.
+  \item \textbf{Tools that understand programs.} An assistant, a language
+        model or an analyser can read effects off the page rather than guess
+        them from names. When a model leaves out an effect, or declares
+        one it does not need, the compiler's error points to exactly where the
+        fix belongs, and the model makes it. In Barney's work this happens
+        again and again.
+  \item \textbf{Effects that can be composed.} Because effectful blocks are
+        small and local, several can sit in one function, and one can sit
+        inside another. The monad stands out instead of being hidden.
+\end{itemize}

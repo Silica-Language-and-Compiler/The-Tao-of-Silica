@@ -1,0 +1,238 @@
+% =====================================================================
+%  Chapter 1 — Why? and Why Not?
+%  Map: research/chapter-map.md (Chapter 1)
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chapter{Why? and Why Not?}
+\label{ch:why}
+
+% TODO-INTERVIEW: Choose an epigraph (not from the author's own words).
+
+Every programming language is an answer. Most of the time nobody remembers
+the question. Garbage collectors, loops, exceptions, type aliases, optimizers
+that quietly repair what the programmer wrote: these arrive in a new language
+as inheritance, carried forward because the last language had them and the one
+before that did too. Silica began when Lee Barney stopped accepting the
+inheritance and started asking, of each piece, a child's question: \emph{why?}
+
+This book is about what happened when that question was asked persistently,
+for years, of the tools working programmers trust most. It is also about the
+question that comes second, and is harder to ask: \emph{why not?} The first
+question takes things apart. The second decides whether to build something in
+their place.
+
+\section{The question that would not go away}
+
+Barney cannot point to the first time the question came up. What stands out in
+memory is the arrival of Java, and how much safer it felt than the C and C++
+that Barney had been writing in industry. The sense that some languages protect
+the people who use them, and others leave them exposed, was there long before
+it had a name.
+
+In December 2023 a group of national security agencies published a case for
+memory-safe roadmaps, and in early 2024 the White House technical report
+followed. Both named a short list of languages---C\#, Go, Java, Python, Rust and
+Swift---as memory safe. Reading them, Barney, then teaching at Brigham Young
+University--Idaho, wondered how that list had been chosen. Why those languages,
+and not others?
+
+The paper that followed was not Barney's idea. At CodeBEAM in San Francisco, a
+professional conference for the Erlang community rather than an academic one,
+a member of the Erlang Ecosystem Foundation asked Barney to write an article
+arguing, if the data supported it, that the BEAM languages Erlang and Elixir
+belonged on the list.\footnote{Interview, 2026-11-13.}
+
+The data did not entirely cooperate. The paper, written with Adolfo Neto and
+presented at the ACM Erlang Workshop in Milan in September
+2024,\footnote{L.~Barney and A.~Neto, ``Unsafe Impedance: Safe Languages and
+Safe by Design Software,'' Erlang '24. Source:
+\src{BEAM Security Article/Article/unsafe_impedance_0715/}.} argued that being
+memory safe is a necessary property and not a sufficient
+one.\footnote{The paper's phrase is ``necessary but insufficient.''} It proposed
+a new way to measure languages: by how hard they make it to write, load, and
+above all \emph{hide} unsafe code. The paper called that difficulty
+\emph{unsafe impedance}, and graded languages from none to infinite. Erlang and
+Elixir scored well, but not perfectly, because native code loaded into the BEAM
+can hide too. And the paper's last observation was the one that mattered. No
+language that was secure by default had infinite unsafe impedance. None
+existed.\footnote{``there are no secure by default languages that have
+infinite unsafe impedance.''}
+
+An advocate might have been troubled by where the evidence led. Barney was not.
+The point, as Barney saw it, was to find out what was true rather than to win
+an argument, and the truth was that no language, the BEAM's included, was beyond
+criticism. The same standard would later be turned on Silica
+itself.\footnote{``Advocacy is not what I'm about. I care about honesty and
+truth.'' Interview, 2026-11-13.}
+
+That last sentence of the paper is a strange one to write if you have no
+intention of doing anything about it. Chapter~\ref{ch:danger} follows the idea
+into Silica's foreign function interface. Here it matters for a different
+reason: it is the first place in the record where the \emph{why?} points at a
+gap rather than at a fault.
+
+\section{A habit of asking}
+
+Read Silica's design documents in order and the same question turns up again
+and again, in different clothes.
+
+Why does a language need a garbage collector? Silica has none, and its memory
+model (Chapter~\ref{ch:memory}) is built to make one unnecessary.
+Why does a language need loops, when recursion can say the same thing in one
+form instead of three? Why let a programmer give a type a new name, when the
+name hides the shape a reader needs to see? Why let the optimizer clean up dead
+code and duplicate work, rather than asking the programmer to write what they
+meant? Why do languages still model the machine as it was in the 1970s?
+Why should an idle program end itself, or a runtime guess at defaults the
+program never chose?
+
+Each of these questions has a conventional answer, and the conventional
+answers are not foolish. Garbage collection frees programmers from a whole
+class of error. Optimizers make naive code fast. Defaults make simple programs
+short. What the questions expose is that each convenience comes with a cost
+that someone, somewhere, stops being able to see. Silica's principles,
+the subject of the second part of this book, are largely a list of costs
+made visible again.
+
+% TODO-INTERVIEW: Which "why?" was the most uncomfortable to ask — the one
+%   where the conventional answer turned out to be strongest?
+
+\section{When why becomes why not}
+
+Asking why is cheap. It is possible to spend a career asking it, writing
+papers, and changing nothing. Barney's record from 2023 to 2025 shows four
+attempts to answer the question \emph{inside} existing systems before the
+decision to step outside them.
+
+The first was SwErl, a library that brought Erlang's processes and its
+proven design patterns into Swift (Chapter~\ref{ch:history}). The second
+was the 2024 paper, which proposed a human review process, the Unsafe
+Acceptance Process, to raise a team's unsafe impedance when the language would
+not. The third was BEAM\_SEMP, a secure overlay for Erlang networking, which
+spent the autumn of 2025 pulling dangerous defaults out of a running BEAM one
+at a time: switching off standard distribution, banning remote atom creation
+and code loading, refusing to tell a rejected peer why.
+
+The fourth, running alongside the others through 2025, was the most ambitious:
+a port of the BEAM itself from C to Rust. Barney had grown tired of telling
+audiences that Erlang was a memory-safe language, only to be asked what its
+virtual machine was written in, and having to answer, truthfully, C. The
+inevitable reply was that it could not really be safe, then. A virtual machine
+rebuilt in a memory-safe language would answer the objection.
+
+Each attempt worked, after a fashion. Each also ran into the same ceiling.
+A library cannot fix the language it is written in. A review process depends on
+people never having a bad day. A security layer bolted onto a permissive
+runtime is a list of patches, and the next default nobody thought of is
+waiting underneath. And a port, however faithful, can only carry an old design
+into a new language.
+
+% TODO-VERIFY: BEAM_SEMP's last commit date: 2025-10-09 or 2025-10-31.
+% TODO-INTERVIEW: The Rust BEAM port — where is it now, and how far did it get?
+
+\section{The wrong problem}
+
+By 24~December 2025 the Rust port was well along; the re-engineering of the
+virtual machine was most of the way to completion. Barney was working on it
+that day, paused, and began to think. What came out of the thinking was that the
+port was solving the wrong problem.
+
+Every language is designed to solve a particular set of problems. Rust was not
+designed to express the ideas and principles at the heart of the BEAM, and
+making it do so meant forcing square pegs into round holes. No amount of effort
+would produce what an engineer would call a clean solution, and the same was
+true of every other language Barney knew. Barney spent a few minutes going
+through them anyway, looking for one that could readily express the ideas of
+SwErl and SEMP and still be memory safe. It took only those few minutes to see
+that there was none.
+
+The first designs for a new language, on paper and in Barney's head, took a few
+hours. Two days later, on 26~December 2025, Silica's first commit was made. At
+that moment the question had stopped being \emph{why is it like this?} and
+become \emph{why not build something that is not?}
+
+% TODO-INTERVIEW: The 24 December scene — where were you, and what was on the
+%   screen when you paused?
+
+\section{A recovery, and a new kind of reader}
+
+The \emph{why not?} deserves a fuller answer, because the person asking it in
+December 2025 had spent the previous six months relearning how to think.
+
+In June 2025 Barney had what is commonly called a mini-stroke. For a time
+Barney could not read. Thinking was difficult; thinking about large and complex
+things was impossible; forming sentences in order to speak was severely
+restricted. The work on the Rust port became part of the recovery. Rebuilding a
+virtual machine, piece by piece, helped bring back the ability to hold large
+structures in mind, and it was that regained ability that eventually made it
+possible to see the port as the wrong problem. Barney tells this part of the
+story openly, so that others who face something similar know that they are not
+alone.\footnote{Interview, 2026-11-13.}
+
+During the recovery, language models did much of the coding that Barney could
+not. Watching them work, Barney noticed how badly they struggled with existing
+languages, all of which had been designed to be understood by humans alone.
+Getting the code Barney wanted out of them meant fighting them. It began to seem
+easier to start from nothing: to build a language and a compiler around what
+language models do well, instead of forcing them to do what they do badly.
+That observation, made out of necessity, became one of Silica's founding
+principles (Chapter~\ref{ch:oneway}).
+
+None of this would surprise anyone who knows Barney. A lifelong lover of
+languages of every kind, Barney once considered majoring in linguistics as an
+undergraduate, and has long held that language is language, whether spoken by
+people or compiled for machines: each one is shaped by the problems it was made
+to solve. The same recovery has since carried Barney into learning Tagalog.
+
+\section{Turning the question inward}
+
+There is one more thing the record shows, and it may be the most important.
+The questions did not stop once Silica existed. They were turned on Silica
+itself.
+
+Generics were removed six days after the first commit. Structs came and went.
+The standard data structures were built, judged too complicated for their
+purpose, and deleted wholesale in June 2026. Networking was made part of the
+language in September and taken out again within days. And in October 2026, in
+the middle of designing a new memory model, the project discovered that its
+runtime had been quietly using a per-actor heap that nobody had ever
+decided to build---while the public documentation promised that memory lived on
+actor stacks. The question \emph{why is this here?} started the largest
+redesign in the project's history (Chapter~\ref{ch:memory}).
+
+A language designed by asking why has to be willing to ask it of its own
+decisions. The reversals in Silica's history are not signs of indecision. They
+are the method working.
+
+% TODO-INTERVIEW: Which reversal was the hardest to make? Which "why not?"
+%   decision surprised you most once you'd made it?
+
+\section{What the questions became}
+
+Near the end of a 2026 talk introducing Silica to an Erlang audience, the
+closing slide posed three questions instead of conclusions: what a compiler
+should refuse, where a runtime should isolate failure, and how modern hardware
+and tools should shape the design of a source language.\footnote{Slide 11 of
+\src{silica/Silica_intro_FP_Erlang_Elixir_Gleam.pptx}, which asks the reader to
+``Treat systems programming as a design problem again.''} The rest of this book
+is an attempt to show how Silica answers them.
+
+Chapter~\ref{ch:history} tells the story of how the language got from a Rust
+bootstrap compiler to a self-hosting compiler that runs from a Mac to a
+512-kilobyte microcontroller. Chapters~\ref{ch:hidden} through~\ref{ch:transport}
+take the ten principles one at a time. Each began as a \emph{why}. Each became
+real only after someone asked \emph{why not?}
+
+\begin{sidebox}[The questions]
+\begin{itemize}\itemsep0pt
+  \item Why is a language called safe if it lets unsafe code hide?
+  \item Why a garbage collector? Why a heap at all?
+  \item Why loops, generics, type names, conversions?
+  \item Why let the optimizer fix what the programmer wrote?
+  \item Why model a 1970s machine?
+  \item Why defaults the program never chose?
+  \item Why compile libraries separately?
+  \item Why patch the runtime instead of owning it?
+\end{itemize}
+\end{sidebox}

@@ -1,0 +1,127 @@
+% =====================================================================
+%  Chapter 6 — Principle: Resilience (Fail Gently, Never Silently)
+%  Map: research/chapter-map.md (Chapter 6)
+%  Shape: idea → origin → cost → what it opens up. Ideas, not how-to.
+%  Rule: the author is never quoted in body text; short quotes only in
+%  footnotes. Full statements live in interviews/.
+% =====================================================================
+\chaptersubtitle{Fail Gently, Never Silently}
+\chapter{Resilience}
+\label{ch:failsoft}
+
+Silica's motto has two halves. The first, secure by default at compile time,
+belongs to Chapters~\ref{ch:danger} and~\ref{ch:refuses}. The second is about
+what happens when something goes wrong anyway. The program should fail
+gently---one small part, not the whole system---and it should never fail
+silently.\footnote{The motto, from \src{silica/README.md}: ``Secure by default
+at compile time --- fail soft, never fail silent.''}
+
+\section{Let it fall, help it up}
+
+The idea comes from Erlang, and it is the most counter-intuitive in this book.
+Rather than surrounding every operation with defensive code, let the part that
+fails simply stop, and have a supervisor start it again from a known good
+state. Reliability comes from containment and recovery, not from trying to
+foresee every mistake.
+
+Silica's beginner book explains it with an elephant mother. She does not stop
+her calf from ever stumbling. When it falls, she gets it back on its feet,
+fresh.\footnote{\src{silica/docs/learn-programming.md}, lines 27--29 and 1339.}
+Silica takes the idea out of Erlang's virtual machine and builds it into
+programs that run directly on the hardware, and it insists that every program
+arrange for failures to be noticed before anything else begins. Barney had
+learned the hard way, building SwErl, that supervision is nearly impossible
+without control over how a failing actor reports its failure
+(Chapter~\ref{ch:actors}).
+
+% TODO-INTERVIEW: Where did the elephant-mother image come from?
+
+\section{Guard only what can be ruined}
+
+Letting things fail does not mean never checking. Silica's guidance names just
+two reasons to guard against an error: when the failure would corrupt data, and
+when it would happen so often that recovering every time would slow the system
+down. Everywhere else, the advice is to write no check at all and let the
+supervisor do its work. When something does go wrong---a request for an item
+past the end of a list, for instance---the faulty operation is never carried
+out, so nothing is damaged, and only the part that asked for it stops.
+
+% TODO-VERIFY: The two-criteria wording is agent-recorded in .claude-memory;
+%   the beginner book has a published version (learn-programming.md ~1331).
+
+\section{Never silent}
+
+The second half of the motto is held just as firmly. A failure is always
+reported, and there is no way to switch the report off. Silica regards a
+failure that leaves no trace as a fault in the language's own runtime. Failures
+a program expects are handled as ordinary results; failures it does not expect
+stop the part concerned and are announced.
+
+\section{Whoever sets a limit owns it}
+
+A related idea runs through Silica's treatment of resources. The language
+itself imposes few arbitrary ceilings: an actor's memory grows as needed, and
+queues of waiting messages are not capped. The reasoning is that limits belong
+to whoever chose them. A program that sets its own sizes, or starts a thousand
+risky workers, knows its numbers, and handling the consequences is that
+program's job, not a hidden rule's.
+
+\section{When the ground itself is broken}
+
+Letting a part fail assumes the ground beneath it is still sound, and foreign
+code written in C is the hardest test of that assumption. Silica meets it with
+the same idea it uses everywhere else. Foreign code runs only inside workers set
+aside for it, and when that code crashes, the runtime catches the fault, ends
+that one worker, throws away the scratch memory it shared with the C code, and
+hands the failure to the worker's supervisor, which restarts it like any other
+actor. The rest of the application carries on.\footnote{The design names the
+dangerous actor as ``the desired failure unit'':
+\src{silica/compiler/design_documents/dangerous_ffi_security_model.md}, lines
+217 and 243--244.}
+
+Silica is candid about where that promise ends. C can damage memory without
+crashing at all, or damage the runtime itself, and no supervisor can repair
+what cannot be detected. Only when a fault strikes outside those guarded
+workers, or the runtime can no longer trust its own state, does the whole
+program stop---and even then it says why. For libraries that cannot be trusted
+at all, the design points to running them in a separate process altogether.
+
+% TODO-INTERVIEW: How did you arrive at the guarded dangerous actor as the
+%   unit of failure for foreign code? What did it take to make that work?
+
+\section{A motto that changed}
+
+When the project went public in April 2026, its motto said in effect that bad
+security practice should always be a compiler error. Within days it became the
+two-part motto above, and it later gained the words at compile time. The change
+gave the running program, not only the compiler, a part in keeping its
+promises.
+
+% TODO-INTERVIEW: What changed in your thinking between the two mottos?
+
+\section{What it costs}
+
+Letting things fail asks programmers to unlearn habits of defensive coding,
+and asks designers to think about supervision from the first day. Refusing to
+fail silently means facing every failure, even those it might be more
+comfortable not to know about.
+
+\section{What it opens up}
+
+\begin{itemize}
+  \item \textbf{Systems that keep running.} Devices in the field, services
+        that cannot go down, and machines no one can reach to restart can heal
+        themselves part by part.
+  \item \textbf{Simpler code.} Without layers of defensive checks, the code
+        that remains says what the program is for.
+  \item \textbf{Failures that teach.} Because every failure is reported, a
+        system's problems become visible and fixable instead of rumoured.
+  \item \textbf{Reliability on small machines.} Recovery by supervision
+        works on a microcontroller as well as on a server.
+  \item \textbf{Old libraries without old fragility.} A crash in a trusted
+        C library costs one worker and a restart, not the whole
+        application.
+\end{itemize}
+
+% TODO-INTERVIEW: Where would you most like to see this kind of resilience
+%   that it doesn't exist today?
