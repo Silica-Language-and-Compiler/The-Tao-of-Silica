@@ -78,14 +78,22 @@ LLVM was a scaffold from the start. The plan was always for the real compiler
 to emit machine code itself, so that it could reason about the facts of the
 chip it was targeting (Chapter~\ref{ch:machines}).
 
-% TODO-INTERVIEW: Why Rust for the bootstrap, given later views on Rust?
+The choice of Rust for the bootstrap, given how sharply Silica's documents
+would later criticise it, was practical. Barney had been working heavily in Rust
+and had its tools installed. All that was needed was a minimal compiler, able to
+build a compiler that could build itself. The bootstrap never had to express
+Silica's design; it only had to stand long enough for the real compiler to stand
+without it.\footnote{Interview, 2026-11-14.}
 
 \section{A language writing itself}
 
 On 17~January 2026 work began on the second compiler, written in Silica and
 built by the Rust one. On 16~February it produced its first working program:
-a trivial program that returned the number 42, compiled straight to machine instructions with no LLVM in the
-path. The test suite, called the \emph{trials}, started three days later. It
+a trivial program that returned the number 42, compiled straight to machine
+instructions with no LLVM in the path. The founding strategy had allowed six to
+nine months for the bootstrap stage. It took weeks, and nothing was skipped.
+Barney credits Silica's design, a flexible way of working, and practised use of
+language models. The test suite, called the \emph{trials}, started three days later. It
 would become the project's arbiter of truth (Chapter~\ref{ch:refuses}).
 
 Spring brought the language's core: regions in March, sequence blocks for
@@ -97,7 +105,11 @@ danger that the reversal became one of the language's principles
 (Chapter~\ref{ch:danger}).
 
 On 29~June the entire first data-structure library was deleted as too
-complicated for its purpose, and a smaller, trait-based design replaced it.
+complicated for its purpose, and a smaller, trait-based design replaced it. The
+measurements had been plain: it used too much memory, ran too slowly, and fell
+short of what Barney had hoped such structures would make possible. Throwing a
+month's work away was sad, but starting over with a clear idea of what not to do
+felt good, and Barney expects it could happen again.
 
 \section{Standing on its own}
 
@@ -108,7 +120,11 @@ reached a \emph{fixed point}: rebuilt by itself, it produced itself byte for
 byte, while passing more than 33,000 trials. Five days later the same was true
 on a Raspberry Pi, and the Rust bootstrap was deleted.
 
-% TODO-INTERVIEW: Take me to the day of the first fixed point.
+The summer was a little frustrating, but never discouraging: each small change
+brought results that could be seen, and that was enough to show the work was
+heading in a good direction. The fixed point itself took several days of
+watching compiles, as the last leftovers of the Rust build were found and
+removed (Chapter~\ref{ch:refuses}).
 
 \section{Going everywhere}
 
@@ -128,10 +144,8 @@ ever decided on---a leftover of the first actor runtime---while the documentatio
 promised memory on actor stacks. Some forty design decisions were made in three
 days. Everything moved onto actor stacks, with release proven by the compiler
 rather than guessed at runtime (Chapter~\ref{ch:memory}). The new model was
-built across all hosted targets by 4~November.
-
-% TODO-VERIFY: Chunk 15 origin quotes are agent-recorded (.claude-memory);
-%   confirm the account with the author before using any wording.
+built across all hosted targets by 4~November. Barney remembers those three
+days not as a crisis but as exciting.\footnote{Interview, 2026-11-14.}
 
 \section{Reaching out}
 
@@ -145,6 +159,12 @@ distribution story SwErl had started years before.
 
 \section{How the work was done}
 
+Underneath the whole record is a rhythm: build it, measure it, and replace it
+with something better. It is radically different from the industry habit of
+leaving alone whatever is not broken, and it explains why so much of Silica's
+history consists of designs adopted and then dropped. The language models did
+the typing; Barney did the thinking and the judging.
+
 Three features of the process run through the whole record. The trials were the
 gate: a change was not finished until every platform it could affect passed,
 and reference assembly was never regenerated automatically. Barney made the
@@ -157,4 +177,12 @@ models improved and as more Silica existed for them to learn from. After the
 October 2026 discovery that the army had built something no one had decided on,
 the reviews multiplied: automated where possible, and repeated against the
 design documents (Chapter~\ref{ch:hidden}).
-% TODO-INTERVIEW: The quiet summer (June–August 2026): what was happening?
+
+The trials served more than one purpose. In September Barney asked for some
+twenty thousand of them, each a small program paired with its expected result,
+to train language models in Silica and to flush out edge cases no one had yet
+handled. Generating them uncovered silent miscompilations, cases where the
+compiler produced a wrong answer without complaint. That was not a surprise.
+Finding bugs is always part of the plan, because all code is flawed and always
+will be, and that is no reflection on the worth of the person who wrote
+it.\footnote{``All code will always be flawed.'' Interview, 2026-11-14.}

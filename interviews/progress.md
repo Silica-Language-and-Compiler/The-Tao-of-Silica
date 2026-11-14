@@ -7,7 +7,7 @@ Running log kept by the `ghostwriter` skill.
 | Ch | Title | Sessions | Status |
 |---|---|---|---|
 | 1 | Why? and Why Not? | 1 | woven 2026-11-13 (new sections: The wrong problem; A recovery, and a new kind of reader) |
-| 2 | How We Got Here | 0 | draft (ideas + opportunities) |
+| 2 | How We Got Here | 1 | woven 2026-11-14 |
 | 3 | Honesty — Hide Nothing | 1 | woven 2026-11-13 (new section: Honest about the tools) |
 | 4 | Transparency — Say What You Do | 1 | woven 2026-11-13 |
 | 5 | Independence — Share Nothing | 1 | woven 2026-11-13 (new section: The end of one size fits all) |
@@ -491,3 +491,38 @@ To verify:
 Woven (author approved): ch08 (temperament: childhood, simulation-industry
 boundaries, music; collections vs generics; aliases rejected; ten-year view as
 the Dutch masters' studio).
+
+### 2026-11-14 (seventh) — Chapter 2 (How We Got Here)
+Transcript: `sessions/2026-11-14-ch02-history.md`. 7 questions.
+
+Learned:
+- **Why Rust for the bootstrap:** Barney had been working heavily in Rust and had
+  the tooling installed; all that was needed was a minimal compiler able to build
+  a compiler that could build itself. The bootstrap didn't need to express all of
+  Silica's design.
+- **Faster than the 6–9 month plan, nothing skipped:** rapid progress came from
+  Silica's design, a flexible development approach, and knowledgeable use of LLMs.
+- **The approach:** build it; measure it; replace it with better — radically
+  different from industry's "if it ain't broke, don't fix it". LLMs typed;
+  Barney thought and evaluated.
+- **Deleting the first data-structure library (29 June 2026):** too much memory,
+  too slow, didn't capture the hopes for its use. Sad to toss, good to start over
+  having learned what not to do; could happen again.
+- **Self-hosting summer:** a little frustrating, but each small change brought
+  visible results — on the right track.
+- **Trial pairs:** finding bugs is always part of the plan; all code is and will
+  always be flawed, which is no reflection on the worth of its producer. Purpose:
+  train models, and find unhandled edge cases.
+- **October reckoning:** "forty decisions in three days" confirmed ("sounds about
+  right"); remembered as exciting.
+
+New open threads:
+- None new.
+
+To verify:
+- The miscompilation example (`20 + (x + 1)` → 41) in the 2026-09-09 addendum;
+  as noted it is ambiguous. Don't use without checking.
+
+Woven (author approved): ch02 (Rust bootstrap; pace with nothing skipped;
+data-structure deletion; summer and fixed point; reckoning confirmed and
+exciting; build-measure-replace; training trials and flawed code).
